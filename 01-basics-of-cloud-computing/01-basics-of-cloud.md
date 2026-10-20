@@ -144,12 +144,80 @@ Benefits of using FaaS ->
 - **Cost Efficiency** : FaaS facilitates cost efficiency by coming up with the principle "Pay as per you Run" for the computing resources used.
 - **Scalability and Agility** : Serverless Architectures scale effortlessly in handing the workloads promoting agility in development and deployment.
 
-#### _Types of Cloud Deployment Models_:-
+### _Cloud Deployment Models_:-
+
+A cloud deployment model defines where your cloud infrastructure lives, who owns and manages it, and how it is accessed. It establishes the boundaries of your cloud environment, dictating what you can customize, how resources are shared among users, and the overarching purpose of the setup.
+
+Understanding these models is the crucial first step for any business migrating to the cloud, as each offers distinct trade-offs in governance, cost, security, and management.
 
 There are three types of clouds - Public, Private, and Hybrid cloud.
 
-1. **Public Cloud** : In public cloud, the third-party service providers make resources and services available to their customers via Internet. Customer’s data and related security is with the service providers’ owned infrastructure.
+1. **Public Cloud** : The public cloud delivers infrastructure and services over the internet to the general public or broad industry groups. The infrastructure is entirely owned, managed, and maintained by a third-party cloud service provider (e.g., Google Cloud, AWS, Microsoft Azure). Resources are shared among multiple tenants.
 
-2. **Private Cloud** : A private cloud also provides almost similar features as public cloud, but the data and services are managed by the organization or by the third party only for the customer’s organization. In this type of cloud, major control is over the infrastructure so security related issues are minimized.
+   ![PublicCloud](https://media.geeksforgeeks.org/wp-content/uploads/20211123123729/Group4-660x330.jpg)
 
-3. **Hybrid Cloud** : A hybrid cloud is the combination of both private and public cloud. The decision to run on private or public cloud usually depends on various parameters like sensitivity of data and applications, industry certifications and required standards, regulations, etc.
+_Advantages of the Public Cloud Model_ :
+
+- Minimal Investment : Operates on a pay-per-use model with no substantial upfront capital expenditure.
+- Zero Setup & Maintenance: The provider subsidizes and manages all physical hardware setup and ongoing maintenance.
+- Dynamic Scalability : On-demand resources are nearly limitless, scaling instantly to fulfill business needs.
+
+_Disadvantages of the Public Cloud Model_ :
+
+- Lower Security : Because resources are shared publicly, meeting strict, high-level compliance and security standards can be challenging.
+- Low Customization : The standardized environment offers little room for bespoke hardware or infrastructure customizations.
+
+2. **Private Cloud** : The private cloud deployment model is the exact opposite of the public cloud deployment model. It's a one-on-one environment for a single user (customer). There is no need to share your hardware with anyone else. The distinction between private and public clouds is in how you handle all of the hardware. It is also called the "internal cloud" & it refers to the ability to access systems and services within a given border or organization. The cloud platform is implemented in a cloud-based secure environment that is protected by powerful firewalls and under the supervision of an organization's IT department. The private cloud gives greater flexibility of control over cloud resources.
+
+   ![PrivateCloud](https://media.geeksforgeeks.org/wp-content/uploads/20211123123851/Group1-660x330.jpg)
+
+_Advantages of the Private Cloud Model_ :
+
+- Total Control : You have complete command over IT operations, service integration, and user behavior.
+- Elite Security and Privacy : Ideal for sensitive corporate data, allowing for strict access controls and physical isolation.
+- Legacy System Support : Highly customizable, making it capable of supporting legacy applications that cannot migrate to a public environment.
+
+_Disadvantages of the Private Cloud Model_ :
+
+- High Cost : Personalized facilities, dedicated hardware, and internal IT management make this the most expensive option.
+- Limited Scalability : Scaling is restricted by the physical capacity of the dedicated hardware purchased
+
+3. **Hybrid Cloud** : By bridging the public and private worlds with a layer of proprietary software, hybrid cloud computing gives the best of both worlds. With a hybrid solution, you may host the app in a safe environment while taking advantage of the public cloud's cost savings. Organizations can move data and applications between different clouds using a combination of two or more cloud deployment methods, depending on their needs.
+
+   ![HybridCloud](https://media.geeksforgeeks.org/wp-content/uploads/20211123123930/Group2-660x330.jpg)
+
+_Advantages of the Hybrid Cloud Model_ :
+
+- Ultimate Flexibility : Businesses can keep sensitive data secure on the private cloud while running heavy, non-sensitive applications on the public cloud.
+- Cost Efficiency : You only pay for additional public cloud capacity when you experience traffic spikes that your private cloud cannot handle (known as "cloud bursting").
+- Targeted Security : Data theft risks are reduced by keeping the most critical assets completely isolated.
+
+_Disadvantages of the Hybrid Cloud Model_ :
+
+- Difficult to manage : Hybrid clouds are difficult to manage as it is a combination of both public and private cloud. So, it is complex.
+- Slow data transmission : Data transmission in the hybrid cloud takes place through the public cloud so latency occurs.
+
+4. **Multi Cloud** : While a hybrid cloud mixes private and public models, a multi-cloud strategy specifically involves using multiple public cloud providers at the same time (e.g., using AWS for storage, Google Cloud for machine learning, and Azure for active directory).
+
+   ![MultiCloud](https://media.geeksforgeeks.org/wp-content/uploads/20260302182448351287/multi_cloud_vs_hybrid_cloud.webp)
+
+_Advantages of the Multi-Cloud Model_ :
+
+- Best-of-Breed Features : You can mix and match the absolute best tools from different providers to suit specific workloads.
+- Reduced Latency : You can route user traffic to the cloud provider that has a data center closest to that specific user.
+- High Availability : It is incredibly rare for two different major cloud providers to experience outages simultaneously, creating exceptional disaster recovery.
+
+_Disadvantages of the Multi-Cloud Model_ :
+
+- Complex : The combination of many clouds makes the system complex and bottlenecks may occur.
+- Security issue : Due to the complex structure, there may be loopholes to which a hacker can take advantage hence, makes the data insecure.
+
+#### _**How to Choose the Right Deployment Model**_
+
+There is no one-size-fits-all approach. The ideal choice depends entirely on your specific business requirements. Consider these five factors:
+
+- Cost : Determine your budget for upfront capital expenses versus ongoing operational expenses.
+- Scalability : Assess your current traffic and predict how rapidly you will need to scale resources in the future.
+- Ease of Use : Evaluate the technical expertise of your internal IT staff and their ability to manage complex infrastructures.
+- Compliance : Identify any legal or industry regulations (like HIPAA or GDPR) that dictate where and how your data must be stored.
+- Privacy : Classify your data to determine what can be public and what requires strict, isolated confidentiality.
