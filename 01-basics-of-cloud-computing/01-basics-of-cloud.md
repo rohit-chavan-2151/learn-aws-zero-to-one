@@ -47,6 +47,61 @@ All cloud services share the fundamental characteristics that define them :-
 
 7. **Advanced Predictive Analytics** : Cloud computing democratizes big data. Businesses can rent massive processing capacities on-demand to run complex predictive analytics. By analyzing historical data, companies can predict market trends, automate low-value processes, and optimize their business strategies based on deep customer insights.
 
+### _**Architecture of Cloud Computing**_
+
+Cloud computing architecture is the blueprint of components and subcomponents—including a front-end platform, back-end infrastructure, a network, and a cloud-based delivery model—that work together to deliver on-demand computing.
+
+_Core components of Cloud Architecture_ :
+
+- **The Frontend (Client Side)** : It contains all the user interfaces and client infrastructure required for end-users to interact with the cloud. This is the visible interface through which users interact directly with the cloud environment. It acts as the gateway, allowing users to seamlessly access cloud-based services without understanding the underlying infrastructure.
+  - Client Infrastructure : The client infrastructure refers to the hardware and software components used by the end-user to access cloud services. It forms the frontend of cloud architecture and provides the interface through which users interact with cloud applications.
+  - Hardware : Devices such as laptops, desktop computers, smartphones, and tablets.
+  - Software : Web browsers, mobile applications, and other client-side software used to access cloud services.
+  - User Interface : Provides a Graphical User Interface (GUI) through which users can interact with cloud applications.
+  - Communication : Sends user requests to the cloud through the Internet and receives the required data or results.
+  - Access : Allows users to access cloud services from different devices and locations.
+
+- **The Backend (Cloud Provider Side)** : This is the "cloud" itself. It consists of all the resources required to provide cloud computing services. It comprises of huge data storage, virtual machines, security mechanism, services, deployment models, servers etc.
+  - _Application_ : It can be software or platforms that process client requests and deliver the necessary outcomes to end-users. The specific application selected depends heavily on client requirements and resource availability.
+  - _Service Delivery_ : Provides the required services or results to end-users.
+  - _Resource Utilization_ : Uses available cloud resources such as computing power, storage, and databases.
+  - _User Requirements_ : Applications are selected or designed based on the specific needs of the client.
+  - _Services_ : It manages each and every operations that runs on the cloud computing platform. It manages the different types of services that users can access based on their specific requirements.
+
+**Runtime Cloud** : It provides virtual machines an environment for executing and running programs at the same time. In other words, it performs similarly to a cloud-based operating system software that uses virtualization technologies to execute services, enabling multiple run times on the same server.
+
+In other words : A physical server can host multiple virtual machines. Each virtual machine can have its own runtime environment. Different applications can run simultaneously without interfering with one another. The runtime provides the necessary environment for applications to execute properly. This allows cloud providers to use physical servers efficiently.
+
+**Storage** : It is one of the most important components of cloud computing. These services are used to store and manage data. Several users can access the data simultaneously within the cloud storage system. Popular cloud storage solutions include:
+
+- Amazon S3 is a scalable object storage service
+- Microsoft Azure Storage includes blob storage, table storage, and file shares
+- Google Cloud Storage offers high-performance and durable storage for various workloads
+
+**Infrastructure** : It provides services on three levels: Host, Network, and Application.
+
+- Host level provides computing resources required to run cloud services.
+- Network level provides communication between cloud resources and users.
+- Application level provides the actual software and services used by users.
+
+**Management** : It allocates specific resources for tasks and coordinates multiple functions simultaneously within the cloud environment. It ensures that by:
+
+- Monitoring the performance and availability of cloud resources.
+- Allocating and managing computing, storage, and networking resources.
+- It helps increase or decrease resources according to workload.
+- It handles activities such as configuration, maintenance, resource utilization, and billing.
+
+**Security** : It protects cloud resources, applications, services, infrastructure, and data from unauthorized access and security threats. The security layer ensures:
+
+- Secure authentication & identity management (e.g., AWS IAM, Azure Active Directory)
+- Data encryption for sensitive information
+- Firewall protection & threat detection to mitigate cyberattacks
+- Disaster recovery & backup mechanisms for data resilience
+
+**Internet** : The Internet acts as a communication medium or bridge between the frontend and backend of a cloud computing architecture. It allows users to connect to cloud services and enables data and requests to travel between the user's device and the cloud servers.
+
+![CloudArchitecture](https://www.infosectrain.com/wp-content/uploads/2023/07/architecture-of-cloud-computing-.jpg)
+
 ### Types of Cloud :-
 
 1. _**Infrastructure as a Service ( IaaS )**_ : It is a type of cloud computing that gives people access to IT tools like virtual computers, storage, and networks through the internet. You don’t need to buy or manage physical hardware. Instead, you pay only for what you use.
