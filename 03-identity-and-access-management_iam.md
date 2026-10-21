@@ -32,3 +32,41 @@ _**Workflow of IAM**_ : Identity and Access Management (IAM) works by clearly de
 
 - _**Federation and Single Sign-On (SSO)**_ : Federation allows external users to access AWS using existing identity providers. It supports corporate directories and social logins. Enables Single Sign-On (SSO). Reduces password fatigue and improves security.
 - _**Role-Based Access Control (RBAC)**_ : RBAC assigns permissions based on job roles rather than individual users. It simplifies access control, aligns permissions with organizational structure and minimizes security risks caused by excess privileges.
+
+**IAM Permissions** : Users or Groups can be assigned JSON documents called policies. These policies define the permissions of the users. In AWS you apply the least privilege principle: don’t give more permissions than a user needs.
+
+![IAMPernissions](https://miro.medium.com/0*2qvQJOBLk8HEDQNd)
+
+**IAM Policies Inheritance** : IAM policy inheritance is the process where permissions flow down from parent containers or groups to chi ld resources or members.
+
+- _Group Inheritance_ : Users added to an IAM group automatically inherit all permissions attached to that group while keeping their own direct-user policies.
+- _Organization & SCPs_ : AWS Organizations allows declarative policies or Service Control Policies (SCPs) to flow from the Root down through Organizational Units (OUs) to individual AWS Accounts.
+- _Additive Nature_ : Permissions are generally additive; an explicit Deny anywhere in the evaluation chain will override any Allow.
+
+![IAMInheritance](https://kananinirav.com/images/IAM_Policies_inheritance.png)
+
+**IAM Policies Structure** : It consists of,
+
+- Version : policy language version, always include “2012-10-17”
+- Id : an identifier for the policy (optional)
+- Statement : one or more individual statements (required). The statement consists of,
+  - Sid : an identifier for the statement (optional)
+  - Effect : whether the statement allows or denies access (Allow, Deny)
+  - Principal : account/user/role to which this policy applied to
+  - Action : list of actions this policy allows or denies
+  - Resource : list of resources to which the actions applied to
+  - Condition : conditions for when this policy is in effect (optional)
+
+![IAMPolicyStructure](https://sonraisecurity.com/wp-content/uploads/Screenshot-2023-08-14-at-12.47.05-PM.png)
+
+**Multi Factor Authentication - MFA** : Users have access to your account and can possibly change configurations or delete resources in your AWS account. You want to protect your Root Accounts and IAM users. MFA = _password you know_ + _security device you own_
+
+- Main benefit of MFA : if a password is stolen or hacked, the account is not compromised
+- The MFA device options can be a Virtual MFA device like Google Authenticator App (Support for multiple tokens on a single device) or Universal 2nd Factor (U2F) Security Key (Support for multiple root and IAM users using a single security key)
+
+**Users Access in AWS** : To access AWS, you have three options,
+
+- AWS Management Console (protected by password + MFA)
+- AWS Command Line Interface (CLI): protected by access keys
+- AWS Software Developer Kit (SDK) - for code: protected by access keys
+  - Access Keys are generated through the AWS Console. Users can manage their own access keys. Access Keys are secret, just like a password.
