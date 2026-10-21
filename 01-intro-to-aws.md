@@ -2,6 +2,8 @@
 
 Amazon Web Services offers a broad set of global cloud-based products including compute, storage, databases, analytics, networking, mobile, developer tools, management tools, IoT, security, and enterprise applications: on-demand, available in seconds, with pay-as-you-go pricing. From data warehousing to deployment tools, directories to content delivery, over 200 AWS services are available.
 
+---
+
 ### AWS Global Infrastructure
 
 The AWS Cloud infrastructure is built around AWS Regions and Availability Zones. The AWS Global Infrastructure spans 39 Geographic Regions and 124 Availability Zones worldwide, connected by nearly 20 million kilometers of fiber optic cabling. It relies on isolated regions, multi-AZ fault tolerance, and edge locations to deliver low-latency cloud and edge services. Below are mentioned some of the core building blocks :
@@ -27,25 +29,25 @@ AWS Shared Responsibility Model divides cloud security and compliance duties bet
 - The customer assumes responsibility and management of the guest operating system (including updates and security patches), other associated application software as well as the configuration of the AWS provided security group firewall. Customers should carefully consider the services they choose as their responsibilities vary depending on the services used, the integration of those services into their IT environment, and applicable laws and regulations.
 - The nature of this shared responsibility also provides the flexibility and customer control that permits the deployment. As shown in the chart below, this differentiation of responsibility is commonly referred to as Security “of” the Cloud versus Security “in” the Cloud.
 
-1. **AWS Responsibility: "Security of the Cloud"** : AWS manages, protects, and controls the underlying infrastructure that runs all services offered in the AWS Cloud. This includes:
+1. <ins>**AWS Responsibility: "Security of the Cloud"**</ins> : AWS manages, protects, and controls the underlying infrastructure that runs all services offered in the AWS Cloud. This includes:
 
 - Physical Security: Data centers, hardware, surveillance, and environmental controls.
 - Global Infrastructure: Regions, Availability Zones, and edge locations.
 - Hardware & Compute: Servers, storage hardware, and networking gear.
 - Virtualization Layer: The hypervisor and host operating systems.
 
-2. **Customer Responsibility: "Security in the Cloud"** : The customer's exact obligations depend on the specific AWS service model they choose (IaaS, PaaS, or SaaS). General customer duties include:
+2. <ins>**Customer Responsibility: "Security in the Cloud"**</ins> : The customer's exact obligations depend on the specific AWS service model they choose (IaaS, PaaS, or SaaS). General customer duties include:
 
 - Customer Data: Classifying, backing up, and protecting content and data.
 - Identity and Access Management (IAM): Managing user accounts, permissions, roles, and Multi-Factor Authentication (MFA).
 - Network & Firewall Configuration: Configuring security groups, Network Access Control Lists (NACLs), and virtual private clouds (VPCs).
 - Operating System & Applications: Patching, updating, and securing guest operating systems and application software (especially in IaaS models like Amazon EC2)
 
-3. **Shared Controls & Shifting Responsibilities** : Some controls apply to both parties in different contexts:
+3. <ins>**Shared Controls & Shifting Responsibilities**</ins> : Some controls apply to both parties in different contexts:
 
 - Patch Management : AWS patches and fixes flaws in the underlying infrastructure; the customer patches their guest operating systems and application code.
 - Configuration Management : AWS provides secure configuration tools and default baselines, while customers must properly configure their resources.
 - Awareness & Training : AWS trains its internal staff; customers are responsible for training their own personnel.
 - Infrastructure-as-a-Service (EC2) : You manage the guest OS, patches, firewall rules, and application stack.
 - Platform-as-a-Service (RDS) : AWS handles the database engine patching and OS updates, while you manage database access controls, queries, and data encryption.
-- Serverless (Lambda) : AWS manages the servers, OS, and runtime environment, while you are responsible for your function code, IAM roles, and input validation
+- Serverless (Lambda) : AWS manages the servers, OS, and runtime environment, while you are responsible for your function code, IAM roles, and input validation.
