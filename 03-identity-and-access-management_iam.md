@@ -70,3 +70,25 @@ _**Workflow of IAM**_ : Identity and Access Management (IAM) works by clearly de
 - AWS Command Line Interface (CLI): protected by access keys
 - AWS Software Developer Kit (SDK) - for code: protected by access keys
   - Access Keys are generated through the AWS Console. Users can manage their own access keys. Access Keys are secret, just like a password.
+
+**AWS CLI (Command Line Interface)** : A tool that enables you to interact with AWS services using commands in your command-line shell. Direct access to the public APIs of AWS services. You can develop scripts to manage your resources
+
+**AWS SDK (Software Development Kit)** : They are Language-specific APIs (set of libraries). Enables you to access and manage AWS services
+programmatically. They are embedded within your application.
+
+- It supports - SDKs (JavaScript, Python, PHP, .NET, Ruby, Java, Go, Node.js, C++)
+- Mobile SDKs (Android, iOS, …)
+- IoT Device SDKs (Embedded C, Arduino, …)
+
+**AWS IAM Roles for services** : They allow AWS workloads, EC2 instances, or Kubernetes pods to assume temporary, least-privilege credentials. They eliminate hardcoded long-term keys by using a combination of trust policies and permission policies managed via standard service roles or service-linked roles. Core Role Types for Services are,
+
+- AWS Service Roles : Custom roles created by administrators that an AWS service assumes to perform actions on your behalf.
+- Service-Linked Roles (SLRs) : Predefined, unmodifiable roles owned directly by an AWS service (like Auto Scaling or RDS) with pre-configured permissions.
+- IAM Roles for Service Accounts (IRSA) : Used in Amazon EKS to let Kubernetes pods assume AWS IAM roles using OpenID Connect (OIDC) tokens.
+
+**IAM Security Tools** :
+
+- IAM Credentials Report (account-level): A report that lists all your account's users and the status of their various credentials.
+- IAM Access Advisor (user-level) : Access advisor shows the service permissions granted to a user and when those services were last accessed. You can use this information to revise your policies.
+
+![SharedResponsibilityIAM](https://miro.medium.com/v2/resize:fit:1400/1*6WCsTAWD4AidBsflS2lufw.png)
