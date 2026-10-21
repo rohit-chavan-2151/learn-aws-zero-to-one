@@ -6,7 +6,8 @@
 
 Cloud computing is an internet-based computing service in which large groups of remotes servers are networked to allow
 centralized data storage, and online access to computer services or resources.
-So basically, it is known as 'On-demand' delivery of IT resources over the internet with pay-as-you-go pricing. Using cloud computing, organizations can use shared computing and storage resources rather than building, operating, and improving infrastructure on their own.
+So basically, Cloud computing is the on-demand delivery of compute power, database, storage, applications, and other IT resources through a cloud services platform via the internet with pay-as-you-go pricing. Using cloud computing, organizations can use shared computing and storage resources rather than building, operating, and improving infrastructure on their own.
+
 Cloud computing is a model that enables the following features.
 
 - Users can provision and release resources on-demand.
