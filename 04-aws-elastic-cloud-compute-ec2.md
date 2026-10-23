@@ -85,8 +85,11 @@ It is a high-performance, persistent block storage service designed for use with
 
 - Persistent storage that remains available even after an EC2 instance stops or terminates.
 - Delivers low latency and high IOPS for transactional workloads.
-- Automatically replicates data within the same Availability Zone.
+- Automatically replicates data within the same Availability Zone. But its locked to an Availability Zone (AZ) such as an EBS Volume in us-east-1a cannot be attached to us-east-1b. To move a volume across, you first need to snapshot it
 - Supports Elastic Volumes for dynamic resizing and performance tuning.
+- It’s a network drive (i.e. not a physical drive). It uses the network to communicate the instance, which means there might be a bit of
+  latency. It can be detached from an EC2 instance and attached to another one quickly.
+- Have a provisioned capacity (size in GBs, and IOPS). You get billed for all the provisioned capacity. You can increase the capacity of the drive over time.
 
 Amazon EBS provides several native features designed to manage enterprise storage requirements efficiently :
 
@@ -96,6 +99,18 @@ Amazon EBS provides several native features designed to manage enterprise storag
 - EBS Multi-Attach : Attach a single io1 or io2 volume to multiple EC2 instances within the same Availability Zone.
 - High Durability : Provides highly durable storage with durability levels ranging from 99.8% to 99.999% depending on the volume type.
 - Native Encryption : Encrypts data at rest, in transit, snapshots, and attached volumes using AWS Key Management Service (KMS).
+
+**EBS – Delete on Termination attribute** : It controls the EBS behaviour when an EC2 instance terminates.
+
+- By default, the root EBS volume is deleted (attribute enabled)
+- By default, any other attached EBS volume is not deleted (attribute disabled)
+- Use case: preserve root volume when instance is terminated
+
+**EBS Snapshots** : Make a backup (snapshot) of your EBS volume at a point in time. Not necessary to detach volume to do snapshot, but recommended. You can copy snapshots across AZ or Regions.
+
+- EBS Snapshot Archive : Move a Snapshot to an ”archive tier” that is 75% cheaper. But it takes within 24 to 72 hours for restoring
+  the archive.
+- Recycle Bin for EBS Snapshots : Setup rules to retain deleted snapshots so you can recover them after an accidental deletion. You can specify retention (from 1 day to 1 year)
 
 4. <u>_**Security Groups**_</u> : A security Group acts as a virtual firewall for your EC2 instance, controlling all inbound and outbound traffic. You define rules that specify which protocols (e.g., SSH, HTTP), ports (e.g., 22, 80), and IP address ranges are allowed to send traffic to or receive traffic from your instance.
 
@@ -119,6 +134,15 @@ An AWS security group acts as a stateful virtual firewall for your cloud resourc
 - Protocol : A protocol is a collection of guidelines that controls how two devices communicate with one another.
 - Port : A port on a computer serves as the communication endpoint for a particular process or service.
 
+**Classic Ports to know** :
+
+- 22 = SSH (Secure Shell) - log into a Linux instance
+- 21 = FTP (File Transfer Protocol) – upload files into a file share
+- 22 = SFTP (Secure File Transfer Protocol) – upload files using SSH
+- 80 = HTTP – access unsecured websites
+- 443 = HTTPS – access secured websites
+- 3389 = RDP (Remote Desktop Protocol) – log into a Windows instance
+
 > What is Firewall : A firewall is a network security device or software program that monitors, filters, and controls incoming and outgoing network traffic based on predefined security rules. It acts as a digital gatekeeper or barrier between a trusted internal network and untrusted external networks like the internet.
 >
 > How a Firewall Works
@@ -134,3 +158,78 @@ An AWS security group acts as a stateful virtual firewall for your cloud resourc
 - On-Demand: Pay by the second with no commitment. Best for unpredictable workloads and development or testing.
 - Savings Plans / Reserved Instances: Commit to a 1 or 3 year term for discounts of up to 72%. Best for steady-state, predictable workloads.
 - Spot Instances: Bid on spare EC2 capacity for discounts of up to 90%. Ideal for fault-tolerant, interruption-tolerant workloads like batch processing or data analysis, as AWS can terminate these instances with a two-minute warning.
+- Dedicated Hosts : A physical server with EC2 instance capacity fully dedicated to your use. Allows you address compliance requirements and use your existing server-bound software licenses (per-socket, per-core, pe—VM software licenses). Purchasing Options: On-demand – pay per second for active Dedicated Host and Reserved - 1 or 3 years (No Upfront, Partial Upfront, All Upfront)
+- Dedicated Instances : Instances run on hardware that’s dedicated to you only. May share hardware with other instances in same account. No control over instance placement (can move hardware after Stop / Start)
+- Capacity Reservations : Reserve On-Demand instances capacity in a specific AZ for any duration. You always have access to EC2 capacity when you need it. No time commitment (create/cancel anytime), no billing discounts. Combine with Regional Reserved Instances and Savings Plans to benefit from billing discounts. You’re charged at On-Demand rate whether you run instances or not
+
+![SharedResponsiilityForEC2](images/sharedResponsibilityForEC2.png)
+
+_**Amazon Machine Image (AMI)**_ : AMI are a customization of an EC2 instance. It is a pre-configured template that provides the necessary software configuration—including the operating system, application server, and applications—to launch an Amazon EC2 instance.
+
+- Root Volume & Storage : Includes a root volume template with the OS and applications, alongside block device mappings for attached storage volumes. It has a Faster boot / configuration time because all your software is pre-packaged.
+- Permissions & Metadata : Features launch permissions controlling account access and metadata defining architecture, virtualization type, and region. AMI are built for a specific region (and can be copied across regions)
+
+![AmazonMachineImage](https://media.geeksforgeeks.org/wp-content/uploads/20230720114310/AWS-ami.png)
+
+**_AMI Lifecycle_** :
+
+- Create : Launch an instance, configure it (install patches, application code), then create an image from it.
+- Register: The AMI is registered with a unique ID (e.g., ami-12345678) in a specific AWS Region.
+- Copy : AMIs are Region-specific. To use an AMI created in us-east-1 within eu-west-1, you must explicitly copy it to the target Region.
+- Deregister : When an AMI is no longer needed, deregister it to stop it from being used to launch new instances.
+
+**Types of AMI's** :
+
+1. Amazon-Provided AMIs : Official, AWS-maintained images for Amazon Linux 2023, Ubuntu, Windows Server, and more.
+2. AWS Marketplace AMIs : Paid images provided by third-party vendors, such as pre-hardened CIS Benchmark images or application appliances like WordPress.
+3. Community AMIs : Images shared publicly by other AWS users. Use with caution and always verify the source, as they may contain malware or backdoors.
+4. Custom AMIs : Your own "Golden Images" that you build, harden, and maintain to meet internal standards.
+
+**EC2 Image Builder** : EC2 builder is a tool provided by AWS cloud providers to create, customize, manage, and distribute EC2 images(AMIs).
+
+- Image Recipes : Blueprints that define the base image (such as Amazon Linux, Windows, or macOS) and components (software to install, shell scripts, or security patches).
+- Automation Pipelines : Orchestrate the build, test, store, and distribution phases on a schedule or via manual triggers.
+- Built-in Testing : Validates images automatically before deployment using instance tests and security scans.
+- Distribution & Lifecycle : Shares images across multiple AWS regions and accounts, while managing automated cleanup or deprecation of older versions.
+- Cost : The service itself is free to use, though you pay standard AWS rates for the underlying EC2 instances, EBS storage, and S3 logs utilized during builds.
+
+**EC2 Instance Storage** : EC2 Instance storage is the temporary block storage service offered by AWS. EC2 instance storage, in itself, is not a storage service but a part of the EC2 service. These storage devices physically lie on the same host that provides the EC2 instance and are useful for storing temporary data associated with the EC2 instances.
+
+- With the instance store, you get temporary block-level storage which is associated with each EC2 instance.
+- The size, number, and type of instance store volumes that are available depend on the Instance Type used and they are directly hooked onto the underlying host.
+- However, this data is not persistent i.e. it will not persist a stop/start of an EC2 instance, Reboot request or even if the EC2 instance terminates for Hardware failures. Below are some of the features,
+  - Ephemerality: Data is temporary. It is lost if the instance is stopped, terminated, or if the underlying host hardware fails.
+  - Reboot Persistence : Data typically survives if you simply reboot the instance on the same host.
+  - High Performance : Because the disks are physically connected to the host (not network-attached like EBS), they offer extremely low latency, very high IOPS, and fast read/write speeds.
+  - Cost : There is no extra charge; the storage cost is already included in the EC2 instance pricing.
+  - Availability : Not all EC2 instance types support instance stores; they are built into specific instance families (such as M5D, C6GD, or R6GD).
+  - No Backups : Instance store volumes do not support native AWS snapshots or backups.
+
+**EFS – Elastic File System** : Amazon Elastic File System (EFS) is a fully managed, serverless, and elastic file storage service provided by AWS. It uses the NFS (Network File System) protocol to provide shared file storage that can be accessed simultaneously by thousands of compute resources, unlike Amazon EBS, which provides block storage for a single EC2 instance. EFS works with Linux EC2 instances in multi-AZ. They are highly available, scalable, expensive (3x gp2), pay per use, no capacity planning.
+
+- Automatically scales storage capacity based on usage.
+- Supports simultaneous access from EC2 instances, ECS/EKS containers, and AWS Lambda functions.
+- Uses standard NFSv4.0 and NFSv4.1 protocols for Linux systems.
+- Automatically replicates data across multiple Availability Zones within a Region for high durability and availability.
+- Supports lifecycle policies to move infrequently accessed files to lower-cost storage classes.
+
+![AmazonElasticFileSystemEFS](https://media.geeksforgeeks.org/wp-content/uploads/20260608152014366462/amazon_elastic_file_system.webp)
+
+**_Working_** : Amazon EFS operates through a regional architecture that replicates data across multiple Availability Zones.
+
+1. File System : The top-level AWS resource representing your shared storage.
+2. Mount Targets : Created in each VPC subnet to provide an IP address for EC2 instances or containers to connect to EFS.
+3. NFS Protocol : Mounts the file system onto EC2 instances as a standard local directory using NFSv4.
+4. Regional Replication: Automatically replicates data across multiple Availability Zones within a region for maximum durability.
+
+**_Use Cases_** : Amazon EFS is widely used in enterprise applications that require scalable and shared file storage.
+
+- Secured File Sharing : Enables secure, fast, and consistent file sharing across multiple instances.
+- Web Hosting : Serves as common storage for fleet-based web applications (e.g., WordPress) requiring simultaneous file access.
+- Machine Learning and AI Workloads : Stores massive datasets, allowing parallel access by training models across multiple instances.
+
+  ![ebs-vs-efs](images/ebs-vs-efs.png)
+
+**EFS Infrequent Access (EFS-IA)** : Storage class that is cost-optimized for files not accessed every day. It has up to 92% lower cost compared to EFS Standard. EFS will automatically move your files to EFS-IA based on the last time they were accessed. Enable EFS-IA with a Lifecycle Policy. Example: move files that are not accessed for 60days to EFS-IA. Transparent to the applications accessing EFS.
+
+![sharedResponsibilityForEC2Storage](images/sharedResponsibilityForEC2Storage.png)
