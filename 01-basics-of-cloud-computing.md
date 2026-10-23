@@ -103,7 +103,7 @@ In other words : A physical server can host multiple virtual machines. Each virt
 
 ![CloudArchitecture](https://www.infosectrain.com/wp-content/uploads/2023/07/architecture-of-cloud-computing-.jpg)
 
-### Types of Cloud :-
+### Types of Cloud Services :-
 
 1. _**Infrastructure as a Service ( IaaS )**_ : It is a type of cloud computing that gives people access to IT tools like virtual computers, storage, and networks through the internet. You don’t need to buy or manage physical hardware. Instead, you pay only for what you use.
 
@@ -222,3 +222,39 @@ There is no one-size-fits-all approach. The ideal choice depends entirely on you
 - Ease of Use : Evaluate the technical expertise of your internal IT staff and their ability to manage complex infrastructures.
 - Compliance : Identify any legal or industry regulations (like HIPAA or GDPR) that dictate where and how your data must be stored.
 - Privacy : Classify your data to determine what can be public and what requires strict, isolated confidentiality.
+
+#### _**Virtualization**_ :
+
+Virtualization is a technology that creates simulated, virtual versions of physical computing resources—such as servers, storage, networks, or operating systems—using a software layer called a hypervisor. It allows you to create multiple simulated environments (Virtual Machines or VMs) from a single physical hardware system.
+Some of the features of virtulization are, Better hardware utilization, Reduced infrastructure costs, Easy scalability and flexibility, Improved isolation and security, Faster deployment of servers, Foundation for cloud services like AWS EC2, Azure VMs, and Google Compute Engine.
+
+**Core Architecture** : At the heart of virtualization is a piece of software called the Hypervisor. The hypervisor enables multiple VMs to share the same physical hardware while remaining isolated from each other.
+
+- Physical Hardware (Host): The actual server containing CPU, RAM, storage, and network resources.
+- Hypervisor : Software that creates and manages Virtual Machines by allocating hardware resources to them.
+- Virtual Machine (Guest) : A software-based computer that runs its own Operating System, applications, and libraries independently of other VMs.
+
+Virtualization uses a software layer called a Hypervisor to create multiple virtual computers, known as Virtual Machines (VMs), on a single physical computer. These virtual machines behave like independent computers while sharing the resources of the same physical machine.
+
+![VirtualizationByAWS](https://media.geeksforgeeks.org/wp-content/uploads/20260530094745307623/type1virtualisation.webp)
+
+**Types of Hypervisors** : Understanding the difference between Type 1 and Type 2 hypervisors is critical for system architects.
+
+- _**Type 1: Bare-Metal Hypervisor**_ :
+  How it works : Installed directly on the physical hardware. There is no host Operating System.
+  Performance : High. Direct access to hardware resources.
+  Use Case : Enterprise Data Centers, Cloud Providers (AWS EC2, VMWare ESXi, Microsoft Hyper-V).
+- _**Type 2: Hosted Hypervisor**_ :
+  How it works : Installed as an application on top of an existing OS (like Windows or macOS).
+  Performance : Lower. Requests must pass through the Host OS first.
+  Use Case : Personal use, testing labs (Oracle VirtualBox, VMWare Workstation).
+
+**Virtualization used by AWS** : AWS primarily uses the AWS Nitro System and the Xen Hypervisor.
+
+1.  _**AWS Nitro System**_ : A modern, lightweight, bare-metal hypervisor and custom hardware system used for most recent Amazon EC2 instances. Breaks apart traditional hypervisor functions (such as I/O, networking, and storage) and offloads them to dedicated Nitro cards and chips. Delivers near-bare-metal performance and higher security.
+2.  _**Xen Hypervisor**_ : Used in earlier generations of Amazon EC2 instances. Operates as a Type 1 (bare-metal) hypervisor running directly on the physical server hardware.
+
+Virtualization Modes for EC2 :
+
+- HVM (Hardware-assisted Virtual Machine): Uses hardware extensions to let the guest operating system run directly on the virtualized hardware without modification.
+- PV (Paravirtualization): An older method where the guest OS is modified to work together with the hypervisor API for better performance (largely phased out in favor of HVM and Nitro).
