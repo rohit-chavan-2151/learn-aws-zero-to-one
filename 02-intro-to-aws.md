@@ -9,7 +9,12 @@ Amazon Web Services offers a broad set of global cloud-based products including 
 The AWS Cloud infrastructure is built around AWS Regions and Availability Zones. The AWS Global Infrastructure spans 39 Geographic Regions and 124 Availability Zones worldwide, connected by nearly 20 million kilometers of fiber optic cabling. It relies on isolated regions, multi-AZ fault tolerance, and edge locations to deliver low-latency cloud and edge services. Below are mentioned some of the core building blocks :
 
 - **AWS Regions** : These are independent geographic areas containing multiple data centers designed for data sovereignty and compliance.
-- **AWS Availability Zones** : Distinct facilities within a region with independent power, cooling, and security, linked by low-latency networks. Each region has multiple availability zones (usually 3, min is 3, max is 6). Each availability zone (AZ) is one or more discrete data centers with redundant power, networking, and connectivity. They’re separate from each other, so that they’re isolated from disasters. They’re connected with high bandwidth, ultra-low latency networking.
+- **AWS Availability Zones** : An availability zone (AZ) is an isolated location inside a cloud provider's region consisting of one or more physical data centers. It has distinct facilities within a region with independent power, cooling, and security, linked by low-latency networks. Each region has multiple availability zones (usually 3, min is 3, max is 6).
+  - Each availability zone (AZ) is one or more discrete data centers with redundant power, networking, and connectivity. They’re separate from each other, so that they’re isolated from disasters. They’re connected with high bandwidth, ultra-low latency networking.
+  - Fault Isolation : Each zone acts as a distinct failure domain so that power outages, network issues, or physical events affect only that specific zone.
+  - Low Latency : Zones within the same region connect via high-speed, private, low-latency network links.
+  - Redundancy : Cloud providers (such as Amazon Elastic Compute Cloud and Microsoft Azure) require multiple AZs per region to let applications replicate data and auto-scale safely.
+  - Structure : A single zone can house up to five physical data centers, but no two availability zones ever share the exact same physical building or infrastructure
 - **AWS Regional Services** : Each region has a specific set of services it can offer.
 - **Points of Presence (PoPs)** : A global network of edge locations and regional edge caches for content delivery. Amazon has 400+ Points of Presence (400+ Edge Locations & 10+ Regional Caches) in 90+ cities across 40+ countries. Content is delivered to end users with lower latency.
 
