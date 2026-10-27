@@ -48,3 +48,28 @@ Different approaches can be used depending on workload, architecture, and infras
 - Horizontal Scaling : Typically relies on scale-out arrangements (adding or removing instances dynamically) rather than upgrading existing hardware.
 - Best For : Unpredictable workloads or scenarios where resource requirements fluctuate up and down suddenly for specific time intervals. It is not practical for environments requiring a persistent infrastructure for a constant heavy workload.
 - Mission-Critical Performance : Ensures that applications maintain performance requirements during sudden spikes, preventing potential business losses due to downtime or latency.
+
+### **AWS Elastic Load Balancing (ELB)**
+
+It a fully managed service that automatically distributes incoming application and network traffic across multiple targets, such as Amazon EC2 instances, containers (ECS), Lambda functions, and IP addresses.
+
+- By routing traffic across one or more Availability Zones (AZs), ELB prevents any single resource from being overwhelmed, ensuring your applications achieve high availability, fault tolerance, and seamless scalability.
+
+- It is a managed load balancer, which means AWS guarantees that it will be working, AWS takes care of upgrades, maintenance, high availability, and AWS provides only a few configuration knobs.
+
+**Core Concepts** :
+
+- Listeners : A listener checks for incoming connection requests on a specific protocol and port.
+- Target Groups : A logical group of backend resources such as EC2 instances, containers, IP addresses, or Lambda functions. The load balancer sends traffic to the target group instead of directly to individual instances.
+- Health Checks : ELB regularly checks the health of targets using a path like /health. If a target becomes unhealthy, ELB stops routing traffic to it until it recovers.
+- Cross-Zone Load Balancing : Distributes traffic evenly across healthy targets in all enabled Availability Zones, helping prevent overload in a single zone.
+- Expose a single point of access (DNS) to your application. This means giving your application one primary, human-readable web address (like app.example.com) that points to a central entry point (such as a load balancer, reverse proxy, or API gateway) instead of forcing users or clients to connect directly to individual backend servers or IP addresses.
+- Seamlessly handle failures of downstream instances. When a instance or group of instances goes down, the traffic is routed to another instance which is available.
+
+**Types of Load Balancers in AWS** :
+
+| Load Balancer Type              | OSI Layer | Key Traffic Protocols | Best Use Case                                                               | Key Features                                                                                |
+| ------------------------------- | --------- | --------------------- | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| Application Load Balancer (ALB) | Layer 7   | HTTP, HTTPS, gRPC     | Modern web apps, microservices, and containerized APIs.                     | Path-based routing (e.g., /api vs /static), host-based routing, and SSL termination.        |
+| Network Load Balancer (NLB)     | Layer 4   | TCP, UDP, TLS         | High-performance, ultra-low latency apps like gaming or financial platforms | Scales to millions of requests per second, provides static IP addresses per AZ.             |
+| Gateway Load Balancer (GWLB)    | Layer 3   | IP packets            | Deploying and scaling third-party virtual appliances                        | Centralizes traffic routing through network security appliances like firewalls and IDS/IPS. |

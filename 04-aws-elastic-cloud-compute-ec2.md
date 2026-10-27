@@ -132,7 +132,7 @@ An AWS security group acts as a stateful virtual firewall for your cloud resourc
 - VPC : A virtual network called a virtual private cloud enables you to launch Amazon resources into a defined virtual network.
 - CIDR : A technique for allocating IP addresses and rerouting Internet Protocol packets is called classless inter-domain routing (CIDR).
 - Protocol : A protocol is a collection of guidelines that controls how two devices communicate with one another.
-- Port : A port on a computer serves as the communication endpoint for a particular process or service.
+- Port : A port on a computer serves as the communication endpoint for a particular process or service. It is a 16-bit virtual identifier (ranging from 0 to 65,535) used in computer networking to direct incoming and outgoing data packets to the correct application or service running on a device. While an IP address delivers data to the right machine, the port number acts as a specific door that routes that data to the proper program.
 
 **Classic Ports to know** :
 
@@ -233,3 +233,19 @@ _**Amazon Machine Image (AMI)**_ : AMI are a customization of an EC2 instance. I
 **EFS Infrequent Access (EFS-IA)** : Storage class that is cost-optimized for files not accessed every day. It has up to 92% lower cost compared to EFS Standard. EFS will automatically move your files to EFS-IA based on the last time they were accessed. Enable EFS-IA with a Lifecycle Policy. Example: move files that are not accessed for 60days to EFS-IA. Transparent to the applications accessing EFS.
 
 ![sharedResponsibilityForEC2Storage](images/sharedResponsibilityForEC2Storage.png)
+
+**AWS EC2 Status checks** : An Amazon EC2 status check is an automated test performed by AWS every minute to detect hardware, software, or network issues on your virtual server. It performs 3 types of check for an EC2 instance,
+
+1. _System Status Check_ : Monitors the underlying AWS physical hardware, power, network connectivity, and host systems. If it fails, the issue is on AWS’s side (such as a physical server failure).
+2. _Instance Status Check_ : Monitors the internal software and network configuration of your specific virtual machine (such as a corrupted file system, exhausted memory, bad kernel, or invalid network stack). If it fails, the issue is inside your operating system.
+3. _Attached EBS Status Check_ : Verifies that the Amazon Elastic Block Store (EBS) volumes attached to your instance can perform input/output operations properly.
+
+> Remote Desktop Protocol (RDP) is a proprietary network protocol developed by Microsoft that lets users connect to and control a remote computer or server with a full graphical interface.
+>
+> > How It Works
+> > Client-Server Model : The computer being controlled runs RDP server software, while the user connects from a local device running RDP client software.
+>
+> > Input and Output : The server broadcasts real-time screen and audio data to the client, while the client sends keyboard and mouse inputs back to the server.
+>
+> > Port and Transport : It communicates by default over TCP and UDP port 3389.
+> > Underlying Standard : RDP is built on an extension of the ITU-T T.120 family of protocol standards
