@@ -73,3 +73,49 @@ It a fully managed service that automatically distributes incoming application a
 | Application Load Balancer (ALB) | Layer 7   | HTTP, HTTPS, gRPC     | Modern web apps, microservices, and containerized APIs.                     | Path-based routing (e.g., /api vs /static), host-based routing, and SSL termination.        |
 | Network Load Balancer (NLB)     | Layer 4   | TCP, UDP, TLS         | High-performance, ultra-low latency apps like gaming or financial platforms | Scales to millions of requests per second, provides static IP addresses per AZ.             |
 | Gateway Load Balancer (GWLB)    | Layer 3   | IP packets            | Deploying and scaling third-party virtual appliances                        | Centralizes traffic routing through network security appliances like firewalls and IDS/IPS. |
+
+### **AWS EC2 Auto Scaling & Auto Scaling Groups**
+
+- Amazon EC2 Auto Scaling helps you ensure that you have the correct number of Amazon EC2 instances available to handle the load for your application. You create collections of EC2 instances, called _Auto Scaling groups_.
+- An Amazon EC2 Auto Scaling group is a collection of Amazon EC2 Auto Scaling instances that are managed and scaled automatically as a single unit.
+- The goal of an Auto Scaling Group (ASG) is to:
+  - Scale out (add EC2 instances) to match an increased load
+  - Scale in (remove EC2 instances) to match a decreased load
+  - Ensure we have a minimum and a maximum number of machines running
+  - Automatically register new instances to a load balancer
+  - Replace unhealthy instances
+
+  ![AutoScalingGroup](https://docs.aws.amazon.com/images/autoscaling/ec2/userguide/images/asg-basic-arch.png)
+
+**Core Concepts of Auto Scaling Groups** :
+
+- Capacity Limits : You define a minimum size, maximum size, and desired capacity for the group. The group will never drop below the minimum or exceed the maximum limits.
+  - Minimum Size : The minimum number of instances in each Auto Scaling group ensures that your group never goes below this size.
+  - Maximum Size : The maximum number of instances in each Auto Scaling group ensures that your group never goes above this size.
+  - Desired Capacity : The desired capacity, either when you create the group or at any time thereafter, ensures that your group has this many instances.
+- Launch Templates : The group uses a launch template to specify instance configuration details, such as the Amazon Machine Image (AMI), instance type, security groups, and key pairs.
+- Health Checks : Periodic health checks monitor instances and automatically terminate and replace any unhealthy instances to maintain the desired capacity.
+- Availability Zones : Capacity spreads automatically across multiple Availability Zones (AZs) to improve application reliability and fault tolerance.
+- Scaling Policies : Dynamic scaling policies, schedules, or manual adjustments launch or terminate instances in response to changing application traffic and CPU or memory load.
+- Default Limits : By default, an Auto Scaling group can manage up to 200 EC2 instances, though this quota can be increased via AWS support.
+- Automated replacement of Spot Instances : If your group includes Spot Instances, Amazon EC2 Auto Scaling can automatically request replacement Spot capacity if your Spot Instances are interrupted. Through Capacity Rebalancing, Amazon EC2 Auto Scaling can also monitor and proactively replace your Spot Instances that are at an elevated risk of interruption.
+- Load balancing : You can use Elastic Load Balancing load balancing and health checks to ensure an even distribution of application traffic to your healthy instances. Whenever instances are launched or terminated, Amazon EC2 Auto Scaling automatically registers and deregisters the instances from the load balancer.
+- Scalability : Amazon EC2 Auto Scaling also provides several ways for you to scale your Auto Scaling groups. Using auto scaling allows you to maintain application availability and reduce costs by adding capacity to handle peak loads and removing capacity when demand is lower. You can also manually adjust the size of your Auto Scaling group as needed.
+
+_Some advanced features of EC2 Auto Scaling_ :
+
+- Instance refresh : The instance refresh feature provides a mechanism to update instances in a rolling fashion when you update your AMI or launch template. You can also use a phased approach, known as a canary deployment, to test a new AMI or launch template on a small set of instances before rolling it out to the whole group.
+- Lifecycle hooks : Lifecycle hooks are useful for defining custom actions that are invoked as new instances launch or before instances are terminated. This feature is particularly useful for building event-driven architectures, but it also helps you manage instances through their lifecycle.
+- Support for stateful workloads : Lifecycle hooks also offer a mechanism for persisting state on shut down. To ensure continuity for stateful applications, you can also use scale-in protection or custom termination policies to prevent instances with long-running processes from terminating early.
+
+  ![AutoScalingWithLoadBalancer](https://docs.aws.amazon.com/images/autoscaling/ec2/userguide/images/elb-tutorial-architecture-diagram.png)
+
+**_Auto Scaling Groups – Scaling Strategies_** : An Auto Scaling Group (ASG) scaling strategy automatically adjusts the number of running instances to match application demand, balancing performance, availability, and cost. ([Read More about this](https://www.nops.io/blog/aws-auto-scaling-benefits-strategies/))
+
+- Target Tracking Scaling : Maintains a specified metric—such as average CPU utilization (e.g., 50%) or request count per target—at a target value by adding or removing instances.
+- Step and Simple Scaling : Triggers scaling actions based on CloudWatch alarms when static metric thresholds are crossed.
+  - Simple scaling applies a specific adjustment (e.g., add 2 instances) and waits for a cooldown period.
+  - Step scaling applies varying adjustments based on the size of the alarm breach.
+- Scheduled Scaling : Proactively scales capacity up or down based on predictable time-and-date schedules (e.g., scaling out before a daily peak-hour traffic surge).
+- Predictive Scaling : Uses machine learning to analyze historical traffic patterns and automatically provisions or deallocates instances before the demand spike occurs.
+- Manual Scaling : Manually overrides and updates the group's minimum, maximum, or desired capacity directly via the console or CLI.
