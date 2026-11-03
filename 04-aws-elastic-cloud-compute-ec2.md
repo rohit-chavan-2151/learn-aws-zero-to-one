@@ -106,11 +106,18 @@ Amazon EBS provides several native features designed to manage enterprise storag
 - By default, any other attached EBS volume is not deleted (attribute disabled)
 - Use case: preserve root volume when instance is terminated
 
-**EBS Snapshots** : Make a backup (snapshot) of your EBS volume at a point in time. Not necessary to detach volume to do snapshot, but recommended. You can copy snapshots across AZ or Regions.
+**EBS Snapshots** : Amazon EBS snapshots are incremental, point-in-time backups of Amazon Elastic Block Store (EBS) volumes stored in Amazon S3. You make a backup (snapshot) of your EBS volume at a point in time. Not necessary to detach volume to do snapshot, but recommended. You can copy snapshots across AZ or Regions.
+
+- **How They Work** :
+  - Incremental Backups : The first snapshot is a full copy of all data blocks on the volume. Later snapshots only save blocks that have changed since the previous backup.
+  - Automatic Chain Management : If you delete an older snapshot, only the data blocks unique to that snapshot are deleted; blocks shared with other snapshots in the chain are preserved.
+  - Storage Location : Snapshots live in Amazon S3 and are decoupled from specific Availability Zones (AZs), making them portable across regions
 
 - EBS Snapshot Archive : Move a Snapshot to an ”archive tier” that is 75% cheaper. But it takes within 24 to 72 hours for restoring
   the archive.
 - Recycle Bin for EBS Snapshots : Setup rules to retain deleted snapshots so you can recover them after an accidental deletion. You can specify retention (from 1 day to 1 year)
+- Fast Snapshot Restore (FSR) : Eliminates initial read latency ("warming up") on newly restored volumes, though it incurs extra costs
+- Automation : You can schedule and manage lifecycle policies using Amazon Data Lifecycle Manager (DLM) or AWS Backup.
 
 4. <u>_**Security Groups**_</u> : A security Group acts as a virtual firewall for your EC2 instance, controlling all inbound and outbound traffic. You define rules that specify which protocols (e.g., SSH, HTTP), ports (e.g., 22, 80), and IP address ranges are allowed to send traffic to or receive traffic from your instance.
 
