@@ -154,3 +154,23 @@ AWS S3 Versioning is a bucket-level feature that allows you to preserve, retriev
    • To Restore: You simply show all versions in the AWS S3 Console, find the Delete Marker, and delete it. This pushes the previous version back to being the current version.
 
 3. Permanent Deletion : To permanently erase data, you must perform a DELETE request and explicitly provide the unique Version ID of the specific file version or the Delete Marker you want to remove.
+
+### AWS S3 Replication
+
+Amazon S3 Replication is a fully managed, automatic, and asynchronous feature that copies objects across Amazon S3 buckets. By default, it automatically replicates newly uploaded objects and requires Object Versioning to be enabled on both the source and destination buckets.
+
+- You can use replication to enable automatic, asynchronous copying of objects across Amazon S3 buckets. Buckets that are configured for object replication can be owned by the same AWS account or by different accounts.
+- You can replicate objects to a single destination bucket or to multiple destination buckets. The destination buckets can be in different AWS Regions or within the same Region as the source bucket.
+- There are two types of replication: live replication and on-demand replication.
+  - **Live replication** – To automatically replicate new and updated objects as they are written to the source bucket, use live replication. Live replication doesn't replicate any objects that existed in the bucket before you set up replication. To replicate objects that existed before you set up replication, use on-demand replication. There are two forms of live replication : _**Cross-Region Replication (CRR)**_ and _**Same-Region Replication (SRR)**_
+    - Cross-Region Replication (CRR) – You can use CRR to replicate objects across Amazon S3 buckets in different AWS Regions. The source bucket and target bucket are in different AWS regions. The primary use cases can be Disaster recovery, geographical compliance, minimizing user latency. Standard inter-region data transfer fees apply as a part of data transfer cost.
+    - Same-Region Replication (SRR) – You can use SRR to copy objects across Amazon S3 buckets in the same AWS Region. The source bucket and target bucket are in same AWS regions. The primary use case can be Log aggregation, test/prod environment separation, strict data sovereignty. No inter region transfer cost apply, as it is free.
+  - **On-demand replication** – To replicate existing objects from the source bucket to one or more destination buckets on demand, use S3 Batch Replication.
+
+**Key Features & Capabilities** :
+
+- S3 Batch Replication : Standard replication only copies new objects uploaded after the rule is created. To copy your existing historical data, you can trigger a S3 Batch Replication job.
+- Replication Time Control (RTC) : For strict compliance needs, enabling RTC guarantees that 99.99% of new objects are replicated within 15 minutes, backed by an AWS SLA.
+- Granular Filtering : You do not have to replicate the whole bucket. Rules can be scoped down using specific object prefixes (folders) or tags.
+- Metadata & Property Preservation : Replicated objects retain their original creation time, tags, version IDs, and user-defined metadata.
+- Cross-Account Ownership : When replicating to another AWS account, you can change object ownership to the destination account to ensure the receiving party has full access control.
