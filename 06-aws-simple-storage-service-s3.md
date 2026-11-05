@@ -109,3 +109,48 @@ Amazon S3 provides features for auditing and managing access to your buckets and
 | What it does  | Creates a unique hostname/endpoint with its own policy to simplify access for specific teams or apps. | Keeps traffic inside the AWS private network, bypassing the public internet entirely. |
 | Scope         | Attached to a single S3 bucket.                                                                       | Attached to a VPC network route.                                                      |
 | Best Used For | Breaking up a massive, complex bucket policy into smaller, manageable pieces for different teams.     | Securely connecting EC2 instances in a private subnet to S3.                          |
+
+### AWS S3 Versioning
+
+AWS S3 Versioning is a bucket-level feature that allows you to preserve, retrieve, and restore every version of every object stored in your Amazon S3 bucket. It acts as a critical lifecycle management and data protection tool, protecting your data from accidental overwrites or deletions.
+
+- You can use S3 Versioning to keep multiple versions of an object in one bucket so that you can restore objects that are accidentally deleted or overwritten. For example, if you apply S3 Versioning to a bucket, the following changes occur:
+  - If you delete an object, instead of removing the object permanently, Amazon S3 inserts a delete marker, which becomes the current object version. You can then restore the previous version.
+  - If you overwrite an object, Amazon S3 adds a new object version in the bucket. The previous version remains in the bucket and becomes a noncurrent version. You can restore the previous version.
+
+**Benefits of using versioning in S3 bucket** :
+
+- It protects data from accidental deletion or overwriting.
+- Older versions of files are preserved when updates are made.
+- Users can restore or roll back to previous versions easily.
+- It improves data reliability and recovery management.
+- It is useful for maintaining backup copies of important files.
+
+**Versioning States** : Amazon S3 buckets can exist in three different versioning states that control how object versions are stored and managed.
+
+1. _**UnVersioned (Default)**_ : This is the default state of an S3 bucket where objects are stored without maintaining versions.
+   - Uploaded objects remain unversioned.
+   - If a file is updated or replaced, the old file is overwritten permanently.
+   - Previous versions of objects cannot be recovered.
+
+2. _**Versioning-Enabled**_ : This state allows Amazon S3 to maintain multiple versions of the same object.
+   - Every update creates a new version with a unique version ID.
+   - Older versions of files are preserved.
+   - Users can restore previous versions whenever needed.
+   - It provides better data protection and recovery.
+
+3. _**Versioning-Suspended**_ : This state stops the creation of new object versions in the bucket.
+   - New uploaded objects will not receive new version IDs.
+   - Existing older versions are still retained safely.
+   - Previous versions are not deleted even after suspension.
+
+**How Actions Work When Versioning is Enabled** :-
+
+1. Overwriting / Updating a File : When you upload an object with the same key (name) as an existing object, S3 does not replace the old file. Instead, it creates a new version with a brand-new version ID and sets it as the Current Version. The older file becomes a Noncurrent Version.
+
+2. Deleting a File (Soft Delete) : If you perform a standard DELETE request on an object without specifying a version ID:
+   • S3 inserts a Delete Marker as the current version.
+   • The object disappears from the standard bucket view, and subsequent requests will return a 404 Not Found error.
+   • To Restore: You simply show all versions in the AWS S3 Console, find the Delete Marker, and delete it. This pushes the previous version back to being the current version.
+
+3. Permanent Deletion : To permanently erase data, you must perform a DELETE request and explicitly provide the unique Version ID of the specific file version or the Delete Marker you want to remove.
