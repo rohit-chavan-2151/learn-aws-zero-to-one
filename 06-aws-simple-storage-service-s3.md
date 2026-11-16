@@ -6,7 +6,9 @@ Amazon S3 (Simple Storage Service) is a highly scalable, secure, and durable clo
 
 **Benefits and features** :
 
-- _Data performance and durability_ : Scale storage resources to meet fluctuating demands, with no upfront investments or resource procurement cycles. Your data is available when needed and protected against failures, errors, and threats.
+- _S3 Durability_ : Amazon S3 delivers up to 99.999999999% (11 nines) of data durability. Measures the probability that your data will remain intact, uncorrupted, and safe from hardware failures over a given year. With 11 nines of durability, if you store 10 million objects in S3, you can expect to lose a single object roughly once every 10,000 years.
+- _S3 Availibility_ : Measures the percentage of time that the S3 service is up, running, and accessible for read and write requests. It varies depending on storage class. Eg :- S3 standard has 99.99% availability = not available 53 minutes a year.
+- _Data performance_ : Scale storage resources to meet fluctuating demands, with no upfront investments or resource procurement cycles. Your data is available when needed and protected against failures, errors, and threats.
 - _Security, compliance, and auditing_ : Secure your data from unauthorized access using encryption and access management features. S3 also maintains compliance programs and supports numerous auditing capabilities.
 - _Flexible storage options_ : Save costs without sacrificing performance. Store data across a wide range of cost-effective storage classes that support different data access levels and are designed for specific use cases.
 - _Granular data control_ : Classify, manage, and report on your data using a variety of storage management features. Log activities, define alerts, and automate workflows without managing additional infrastructure.
@@ -174,3 +176,5 @@ Amazon S3 Replication is a fully managed, automatic, and asynchronous feature th
 - Granular Filtering : You do not have to replicate the whole bucket. Rules can be scoped down using specific object prefixes (folders) or tags.
 - Metadata & Property Preservation : Replicated objects retain their original creation time, tags, version IDs, and user-defined metadata.
 - Cross-Account Ownership : When replicating to another AWS account, you can change object ownership to the destination account to ensure the receiving party has full access control.
+
+![sharedResponsibilityModelForS3](images/sharedResponsibilityModelForS3.png)
