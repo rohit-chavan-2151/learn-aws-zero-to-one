@@ -11,6 +11,8 @@ AWS Identity and Access Management (IAM) is a core security service in Amazon We
   - **Inline Policies** : Policies embedded directly into a single IAM user, group, or role.
   - **Resource-Based Policies** : Policies attached directly to AWS resources such as S3 bucket policies.
 
+---
+
 _**Workflow of IAM**_ : Identity and Access Management (IAM) works by clearly defining who can access AWS, what they can access, and under what conditions. Its working can be understood in the following flow:
 
 ![workflowOfIAM](https://media.geeksforgeeks.org/wp-content/uploads/20260608163749217807/IAM-aws.webp)
@@ -32,6 +34,8 @@ _**Workflow of IAM**_ : Identity and Access Management (IAM) works by clearly de
 
 - _**Federation and Single Sign-On (SSO)**_ : Federation allows external users to access AWS using existing identity providers. It supports corporate directories and social logins. Enables Single Sign-On (SSO). Reduces password fatigue and improves security.
 - _**Role-Based Access Control (RBAC)**_ : RBAC assigns permissions based on job roles rather than individual users. It simplifies access control, aligns permissions with organizational structure and minimizes security risks caused by excess privileges.
+
+---
 
 **IAM Permissions** : Users or Groups can be assigned JSON documents called policies. These policies define the permissions of the users. In AWS you apply the least privilege principle: don’t give more permissions than a user needs.
 

@@ -9,6 +9,8 @@ _Some key architectural highlights of AWS Database services are :_
 - Generative AI & Vector Search : Multiple AWS engines—including Aurora PostgreSQL, RDS for PostgreSQL, DocumentDB, MemoryDB, and Neptune—support vector embeddings for Retrieval-Augmented Generation (RAG) and semantic search.
 - Seamless Migration : The AWS Database Migration Service (DMS) helps move on-premises databases to AWS with minimal downtime, supporting both homogeneous and heterogeneous schema conversions.
 
+---
+
 ### AWS RDS (Relational Database Service)
 
 Amazon Relational Database Service (Amazon RDS) is a web service that makes it easier to set up, operate, and scale a relational database in the AWS Cloud. It provides cost-efficient, resizable capacity for an industry-standard relational database and manages common database administration tasks.
@@ -39,6 +41,8 @@ _**Amazon RDS application architecture**_ : The following image shows a typical 
 
   > DB engines : A DB engine is the specific relational database software that runs on your DB instance. Amazon RDS supports the following database engines - IBM Db2, MariaDB, MIcrosoft SQL server, MySQL, Oracle Database, PostgresSQL
 
+---
+
 #### **Amazon Aurora**
 
 Amazon Aurora is a fully managed, cloud-native relational database service built by Amazon Web Services (AWS) that is compatible with MySQL and PostgreSQL. Aurora delivers up to 6x the throughput of stock PostgreSQL and up to 6x the throughput of stock MySQL on similar hardware. Aurora is part of the managed database service Amazon Relational Database Service (Amazon RDS) which makes it easier to set up, operate, and scale a relational database in the cloud.
@@ -66,7 +70,9 @@ Amazon Aurora is a fully managed, cloud-native relational database service built
    - High Availability / Failover : Uses semi-synchronous replication for faster commit latencies (up to 2x faster) and automated failover in 25–75 seconds.
    - Use Case : Production workloads requiring both high availability and horizontal read scaling.
 
-#### **Amazon ElastiCache**
+---
+
+### **Amazon ElastiCache**
 
 Amazon ElastiCache is a fully managed, in-memory data store and caching service provided by Amazon Web Services (AWS) that speeds up web applications by storing frequently accessed data in memory rather than querying slower disk-based databases. It helps improve application performance by storing frequently accessed data in memory.
 
@@ -79,6 +85,8 @@ Amazon ElastiCache is a fully managed, in-memory data store and caching service 
 - It has two deployment models :
   - Serverless : Automatically scales capacity up and down based on application traffic with zero infrastructure management or maintenance downtime.
   - Provisioned : Gives you manual or scheduled control over node types, shard counts, and cluster mode configurations
+
+---
 
 ### **Amazon DynamoDB**
 
@@ -113,3 +121,27 @@ _**Core data model of DynamoDB**_ : The DynamoDB data model concepts include tab
 | Traffic Pattern | Unpredictable, spiky, or new workloads       | Predictable, steady, or gradual traffic                         |
 | Billing         | Pay-per-request for actual reads and writes  | Pay for pre-allocated Read and Write Capacity Units (RCUs/WCUs) |
 | Scaling         | Scales instantly with zero capacity planning | Scales via configured Auto Scaling rules                        |
+
+- _**DynamoDB Global Tables**_ : Amazon DynamoDB global tables is a fully managed, multi-Region, and multi-active database feature that provides easy to use data replication and fast local read and write performance for globally scaled applications. They deliver fast local read and write performance alongside a 99.999% availability SLA for globally distributed applications.
+  - Global tables automatically replicate your DynamoDB table data across AWS Regions and optionally across AWS accounts without requiring you to build and maintain your own replication solution.
+  - Global tables are ideal for applications requiring business continuity and high availability through multi-Region deployment.
+  - Any global table replica can serve reads and writes. Applications can achieve high resilience with a low or zero Recovery Point Objective (RPO) by shifting traffic to a different Region if application processing is interrupted in a Region.
+  - Global tables are available in all Regions where DynamoDB is available.
+
+![DynamoDBGlobalTables](https://awsfundamentals.com/assets/blog/dynamodb-global-tables/diagram-illustrating-bidirectional-synchronization-between-aws-regions-us-east-1-and-eu-west-1-using-dynamodb-global-tables-with-arrows-indicating-data-flow-and-labeled-components..gif)
+
+- **How Global Tables Work** : A global table consists of multiple replica tables across different AWS Regions that share the same table name and primary key schema. Every replica operates in an active-active setup, meaning applications can read from and write to any Region simultaneously without custom replication code.
+  - Automated Replication : When an application writes, updates, or deletes an item in one Region, DynamoDB automatically propagates those changes to all other replicas.
+  - Multi-Account Support : As of 2026, you can replicate global tables across separate AWS accounts as well as Regions using resource-based policies for stronger workload isolation.
+  - Settings Synchronization : Capacity modes (on-demand or provisioned), primary keys, and global secondary indexes synchronize automatically across replicas, while tags and deletion protection remain local
+
+- **Consistency modes** : When you create a global table, you can configure its consistency mode. Global tables support two consistency modes : _multi-Region eventual consistency (MREC)_ and _multi-Region strong consistency (MRSC)_.
+
+If you do not specify a consistency mode when creating a global table, the global table defaults to multi-Region eventual consistency (MREC). A global table cannot contain replicas configured with different consistency modes. You cannot change a global table's consistency mode after creation.
+
+| Feature               | Multi-Region Eventual Consistency (MREC)                                         | Multi-Region Strong Consistency (MRSC)                                             |
+| --------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| Replication Style     | Asynchronous background replication (typically under 1–2 seconds)                | Synchronous replication across Regions for zero Recovery Point Objective (RPO)     |
+| Conflict Resolution   | Uses a last-writer-wins strategy based on item-level timestamps                  | Prevents conflicts by ensuring reads always return the latest committed write      |
+| Topology Requirements | Supports two or more Regions within the same account or across multiple accounts | Requires three Regions (or two Regions plus a witness) within a single AWS account |
+| Feature Support       | Supports Time to Live (TTL), DynamoDB Streams, and regional transactions         | Does not support TTL or transactions; Streams are optional                         |

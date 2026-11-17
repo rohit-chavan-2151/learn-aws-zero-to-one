@@ -20,6 +20,8 @@ Amazon S3 (Simple Storage Service) is a highly scalable, secure, and durable clo
 - Static Website Hosting : Hosting client-side web files (HTML, CSS, JavaScript, and images) directly from a bucket without provisioning a server.
 - Media Hosting : Serving high-volume images, videos, and user uploads for web and mobile applications.
 
+---
+
 ### AWS Storage Classes
 
 - Each object in Amazon S3 has a storage class associated with it. By default, objects in S3 are stored in the S3 Standard storage class, however Amazon S3 offers a range of other storage classes for the objects that you store. You choose a class depending on your use case scenario and performance access requirements. Choosing a storage class designed for your use case lets you optimize storage costs, performance, and availability for your objects. All of these storage classes offer high durability.
@@ -69,6 +71,8 @@ Amazon S3 provides the following S3 Glacier storage classes:
 | S3 Glacier Flexible Retrieval | Archived data that doesn't need immediate access (compliance logs, digital media).   | Minutes (Expedited) to hours (Standard / Bulk)                             | 90 days       | ≥ 3 AZs                                                   |
 | S3 Glacier Deep Archive       | Long-term digital preservation and regulatory compliance data.                       | Lowest-cost tier; retrieved within 12 to 48 hours                          | 180 days      | ≥ 3 AZs                                                   |
 
+---
+
 ### Access management and security in S3
 
 Amazon S3 provides features for auditing and managing access to your buckets and objects. By default, S3 buckets and the objects in them are private. You have access only to the S3 resources that you create. To grant granular resource permissions that support your specific use case or to audit the permissions of your Amazon S3 resources, you can use the following features.
@@ -111,6 +115,8 @@ Amazon S3 provides features for auditing and managing access to your buckets and
 | What it does  | Creates a unique hostname/endpoint with its own policy to simplify access for specific teams or apps. | Keeps traffic inside the AWS private network, bypassing the public internet entirely. |
 | Scope         | Attached to a single S3 bucket.                                                                       | Attached to a VPC network route.                                                      |
 | Best Used For | Breaking up a massive, complex bucket policy into smaller, manageable pieces for different teams.     | Securely connecting EC2 instances in a private subnet to S3.                          |
+
+---
 
 ### AWS S3 Versioning
 
@@ -156,6 +162,8 @@ AWS S3 Versioning is a bucket-level feature that allows you to preserve, retriev
    • To Restore: You simply show all versions in the AWS S3 Console, find the Delete Marker, and delete it. This pushes the previous version back to being the current version.
 
 3. Permanent Deletion : To permanently erase data, you must perform a DELETE request and explicitly provide the unique Version ID of the specific file version or the Delete Marker you want to remove.
+
+---
 
 ### AWS S3 Replication
 

@@ -43,6 +43,8 @@ Amazon EC2 is one of the most widely used AWS services because it provides scala
 
 ![EC2NamingConvention](https://docs.aws.amazon.com/images/AWSEC2/latest/UserGuide/images/instance-types.png)
 
+---
+
 #### _EC2 Instance Type Categories_ :
 
 AWS groups EC2 instances into several families based on target use cases.
@@ -78,6 +80,8 @@ AWS groups EC2 instances into several families based on target use cases.
   - _Use Cases_ : Machine learning training and inference, Video rendering and transcoding, Scientific simulations and financial risk analysis (HPC).
 
 3. <u>_**Elastic Block Store (EBS) Volumes**_</u> : Elastic Block Store (EBS) provides durable, block-level storage attached to EC2 instances. It acts as a virtual hard drive for storing data. It persists data independently and can be detached and reattached to different instances
+
+---
 
 #### AWS Elastic Block Store(EBS)
 
@@ -121,6 +125,8 @@ Amazon EBS provides several native features designed to manage enterprise storag
 
 4. <u>_**Security Groups**_</u> : A security Group acts as a virtual firewall for your EC2 instance, controlling all inbound and outbound traffic. You define rules that specify which protocols (e.g., SSH, HTTP), ports (e.g., 22, 80), and IP address ranges are allowed to send traffic to or receive traffic from your instance.
 
+---
+
 #### Security Group in AWS
 
 An AWS security group acts as a stateful virtual firewall for your cloud resources, controlling incoming (inbound) and outgoing (outbound) network traffic at the instance level. They are free to use, block all inbound traffic and allow all outbound traffic by default, and contain only allow rules.
@@ -150,6 +156,8 @@ An AWS security group acts as a stateful virtual firewall for your cloud resourc
 - 443 = HTTPS – access secured websites
 - 3389 = RDP (Remote Desktop Protocol) – log into a Windows instance
 
+---
+
 > What is Firewall : A firewall is a network security device or software program that monitors, filters, and controls incoming and outgoing network traffic based on predefined security rules. It acts as a digital gatekeeper or barrier between a trusted internal network and untrusted external networks like the internet.
 >
 > How a Firewall Works
@@ -157,6 +165,8 @@ An AWS security group acts as a stateful virtual firewall for your cloud resourc
 > - Inspects Packets : It checks data packets—small units of data transmitted over a network—for details like source and destination IP addresses, port numbers, and protocols.
 > - Enforces Rules : It compares each packet against pre-configured security policies to decide whether to accept (allow), reject (block with an error), or drop (silently discard) the traffic.
 > - Tracks Sessions : Advanced firewalls monitor active connection states to ensure return traffic belongs to a legitimate, established session.
+
+---
 
 5. <u>_**Key Pairs**_</u> : A Key Pairs consisting of a public key and a private key, is the set of security credentials used to prove your identity when connecting to a Linux EC2 instance. AWS stores the public key, and you are responsible for securely storing the private key file (.pem). You will use this private key to SSH into your instance.
 

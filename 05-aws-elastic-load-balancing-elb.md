@@ -49,6 +49,8 @@ Different approaches can be used depending on workload, architecture, and infras
 - Best For : Unpredictable workloads or scenarios where resource requirements fluctuate up and down suddenly for specific time intervals. It is not practical for environments requiring a persistent infrastructure for a constant heavy workload.
 - Mission-Critical Performance : Ensures that applications maintain performance requirements during sudden spikes, preventing potential business losses due to downtime or latency.
 
+---
+
 ### **AWS Elastic Load Balancing (ELB)**
 
 It a fully managed service that automatically distributes incoming application and network traffic across multiple targets, such as Amazon EC2 instances, containers (ECS), Lambda functions, and IP addresses.
@@ -73,6 +75,8 @@ It a fully managed service that automatically distributes incoming application a
 | Application Load Balancer (ALB) | Layer 7   | HTTP, HTTPS, gRPC     | Modern web apps, microservices, and containerized APIs.                     | Path-based routing (e.g., /api vs /static), host-based routing, and SSL termination.        |
 | Network Load Balancer (NLB)     | Layer 4   | TCP, UDP, TLS         | High-performance, ultra-low latency apps like gaming or financial platforms | Scales to millions of requests per second, provides static IP addresses per AZ.             |
 | Gateway Load Balancer (GWLB)    | Layer 3   | IP packets            | Deploying and scaling third-party virtual appliances                        | Centralizes traffic routing through network security appliances like firewalls and IDS/IPS. |
+
+---
 
 ### **AWS EC2 Auto Scaling & Auto Scaling Groups**
 
