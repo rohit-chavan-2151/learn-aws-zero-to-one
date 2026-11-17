@@ -65,3 +65,51 @@ Amazon Aurora is a fully managed, cloud-native relational database service built
    - Structure : One writer instance and two readable standby instances distributed across three separate AZs (supported for engines like MySQL and PostgreSQL).
    - High Availability / Failover : Uses semi-synchronous replication for faster commit latencies (up to 2x faster) and automated failover in 25–75 seconds.
    - Use Case : Production workloads requiring both high availability and horizontal read scaling.
+
+#### **Amazon ElastiCache**
+
+Amazon ElastiCache is a fully managed, in-memory data store and caching service provided by Amazon Web Services (AWS) that speeds up web applications by storing frequently accessed data in memory rather than querying slower disk-based databases. It helps improve application performance by storing frequently accessed data in memory.
+
+- Stores data in RAM instead of disks for much faster read and write speeds.
+- Supports Redis OSS, Valkey, and Memcached for easy integration with applications.
+- Works as a fast cache layer in front of databases like Amazon RDS and DynamoDB.
+- Supports clustering for high availability and better scaling.
+- Provides a serverless option that automatically scales based on application traffic.
+
+- It has two deployment models :
+  - Serverless : Automatically scales capacity up and down based on application traffic with zero infrastructure management or maintenance downtime.
+  - Provisioned : Gives you manual or scheduled control over node types, shard counts, and cluster mode configurations
+
+### **Amazon DynamoDB**
+
+Amazon DynamoDB is a serverless, fully managed NoSQL key-value and document database designed to deliver single-digit millisecond performance at any scale. Because AWS handles all server provisioning, patching, and hardware maintenance automatically, developers can focus purely on application logic without managing underlying infrastructure.
+
+_**Core data model of DynamoDB**_ : The DynamoDB data model concepts include tables, items, and attributes.
+
+- Tables : In Amazon DynamoDB, a database is a collection of tables. A table is a collection of items and each item is a collection of attributes.
+  - In a relational database, a table has a predefined schema such as the table name, primary key, list of its column names and their data types. All records stored in the table must have the same set of columns.
+  - In contrast, DynamoDB only requires that a table has a primary key, but does not require you to define all of the attribute names and data types in advance.
+- Items and Attributes : Individual items in a DynamoDB table can have any number of attributes, although there is a limit of 400 KB on the item size. An item size is the sum of lengths of its attribute names and values (binary and UTF-8 lengths).
+  - Each attribute in an item is a name-value pair. An attribute can be single-valued or multi-valued set. For example, a book item can have title and authors attributes. Each book has one title but can have many authors. The multi-valued attribute is a set; duplicate values are not allowed.
+  - For example, consider storing a catalog of products in DynamoDB. You can create a table, ProductCatalog, with the Id attribute as its primary key. The primary key uniquely identifies each item, so that no two products in the table can have the same ID.
+- Data Types : Amazon DynamoDB supports the following data types:
+  - Scalar types – Number, String, Binary, Boolean, and Null.
+  - Multi-valued types – String Set, Number Set, and Binary Set.
+  - Document types – List and Map.
+- Primary Key : When you create a table, in addition to the table name, you must specify the primary key of the table. The primary key uniquely identifies each item in the table, so that no two items can have the same key. DynamoDB supports the following two types of primary keys:
+  - Hash Key : The primary key is made of one attribute, a hash attribute. DynamoDB builds an unordered hash index on this primary key attribute. Each item in the table is uniquely identified by its hash key value.
+  - Hash and Range Key : The primary key is made of two attributes. The first attribute is the hash attribute and the second one is the range attribute. DynamoDB builds an unordered hash index on the hash primary key attribute, and a sorted range index on the range primary key attribute. Each item in the table is uniquely identified by the combination of its hash and range key values. It is possible for two items to have the same hash key value, but those two items must have different range key values.
+- Secondary Indexes : When you create a table with a hash and range key, you can optionally define one or more secondary indexes on that table. A secondary index lets you query the data in the table using an alternate key, in addition to queries against the primary key. DynamoDB supports two kinds of secondary indexes: local secondary indexes and global secondary indexes. You can define up to 5 global secondary indexes and 5 local secondary indexes per table.
+  - Local secondary index : An index that has the same hash key as the table, but a different range key.
+  - Global secondary index : An index with a hash and range key that can be different from those on the table.
+- Query and Scan : In addition to using primary keys to access items, Amazon DynamoDB also provides two APIs for searching the data: Query and Scan.
+  - Query : A Query operation finds items in a table or a secondary index using only primary key attribute values. You must provide a hash key attribute name and a distinct value to search for. You can optionally provide a range key attribute name and value, and use a comparison operator to refine the search results.
+  - Scan : A Scan operation reads every item in a table or a secondary index. By default, a Scan operation returns all of the data attributes for every item in the table or index. You can use the ProjectionExpression parameter so that Scan only returns some of the attributes, rather than all of them.
+
+- Capacity Modes : You can choose how DynamoDB manages and bills for read and write throughput based on your workload patterns.
+
+| Feature         | On-Demand Mode                               | Provisioned Mode                                                |
+| --------------- | -------------------------------------------- | --------------------------------------------------------------- |
+| Traffic Pattern | Unpredictable, spiky, or new workloads       | Predictable, steady, or gradual traffic                         |
+| Billing         | Pay-per-request for actual reads and writes  | Pay for pre-allocated Read and Write Capacity Units (RCUs/WCUs) |
+| Scaling         | Scales instantly with zero capacity planning | Scales via configured Auto Scaling rules                        |
