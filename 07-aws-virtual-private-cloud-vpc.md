@@ -178,7 +178,7 @@ A network access control list (ACL) allows or denies specific inbound or outboun
   - Allow and Deny Actions : Unlike security groups (which only support allow rules), NACLs support both allow and deny rules.
   - Default Rules : Every NACL includes an un-deletable wildcard default rule (designated with an asterisk \*) at the very end that denies any traffic not explicitly matched.
 
-![NACL](https://docs.aws.amazon.com/images/vpc/latest/userguide/images/network-acl.png)
+![NACL](https://miro.medium.com/v2/resize:fit:708/0*0aLr31yyJWEND2ck.png)
 
 - The following diagram shows a VPC with two subnets. Each subnet has a network ACL.
   - When traffic enters the VPC (for example, from a peered VPC, VPN connection, or the internet), the router sends the traffic to its destination.
@@ -207,7 +207,7 @@ A network access control list (ACL) allows or denies specific inbound or outboun
 | Source / Destination | Supports CIDR blocks, IP addresses, and other Security Group IDs          | Supports CIDR blocks and IP addresses only                                          |
 | Default Behavior     | Custom SGs deny all inbound traffic and allow all outbound traffic        | Default NACL allows all inbound/outbound; custom NACLs deny everything by default   |
 
-- **Real-World Example 1: Public Web Server (HTTPS Traffic)** : When hosting a public web server on EC2, you must allow users on the internet to connect over HTTPS (port 443) and receive responses back.
+- _**Real-World Example 1: Public Web Server (HTTPS Traffic)**_ : When hosting a public web server on EC2, you must allow users on the internet to connect over HTTPS (port 443) and receive responses back.
   - _Security Group Rules (WebServer-SG)_ : Because Security Groups are stateful, you only need an inbound rule for port 443. AWS automatically permits the outbound response.
     - Inbound Rule : Allow Type HTTPS | Protocol TCP | Port 443 | Source 0.0.0.0/0 (All IPv4)
     - Outbound Rule : Leave at default (or restrict to internal backend services); return traffic to the user is handled automatically
@@ -217,13 +217,13 @@ A network access control list (ACL) allows or denies specific inbound or outboun
     - Outbound Rule (#100) : ALLOW | Protocol TCP | Port Range 1024–65535 | Destination 0.0.0.0/0 (Allows return traffic to client browsers)
     - Outbound Rule (\*) : DENY | All Traffic | Destination 0.0.0.0/0 (Default catch-all deny)
 
-- **Real-World Example 2: Blocking a Malicious IP Address** : Suppose your application logs show a DDoS attack or brute-force scan coming from 198.51.100.25/32, while you still want legitimate users (0.0.0.0/0) to reach your site.
+- _**Real-World Example 2: Blocking a Malicious IP Address**_ : Suppose your application logs show a DDoS attack or brute-force scan coming from 198.51.100.25/32, while you still want legitimate users (0.0.0.0/0) to reach your site.
   - Why Security Groups cannot do this : Security Groups only support ALLOW rules. You cannot add a rule to block a single IP while keeping 0.0.0.0/0 open.
   - How a NACL solves it : NACLs support explicit DENY rules and process rules in numerical order. You add a lower-numbered rule to block the attacker before the general allow rule runs:
     - Inbound Rule (#50) : DENY | All Traffic | Source 198.51.100.25/32 (Evaluated first — drops malicious traffic immediately)
     - Inbound Rule (#100) : ALLOW | Protocol TCP | Port 443 | Source 0.0.0.0/0 (Evaluated second — lets normal users through)
 
-- **Real-World Example 3: Multi-Tier Database Isolation** : In a three-tier architecture, your database subnet (10.0.3.0/24) should only communicate with your application tier (10.0.2.0/24) on PostgreSQL port 5432.
+- _**Real-World Example 3: Multi-Tier Database Isolation**_ : In a three-tier architecture, your database subnet (10.0.3.0/24) should only communicate with your application tier (10.0.2.0/24) on PostgreSQL port 5432.
   - Security Group Chaining (Database-SG) : Instead of hardcoding private IP addresses that change as Auto Scaling launches or terminates servers, you reference the application tier's Security Group ID directly:
     - Inbound Rule : Allow Type PostgreSQL | Protocol TCP | Port 5432 | Source sg-0abc12345app (Application Tier SG)
   - Subnet-Wide Guardrail (DatabaseSubnet-NACL) : Even if an administrator accidentally opens a Security Group rule to 0.0.0.0/0 on a database instance, the NACL acts as a hard boundary restricting traffic to the application subnet CIDR :
