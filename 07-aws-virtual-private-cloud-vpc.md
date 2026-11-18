@@ -164,3 +164,68 @@ The following diagram shows a VPC with subnets in two Availability Zones and an 
     - Monitoring the traffic that is reaching your instance
     - Determining the direction of the traffic to and from the network interfaces
   - Flow log data is collected outside of the path of your network traffic, and therefore does not affect network throughput or latency. You can create or delete flow logs without any risk of impact to network performance.
+
+---
+
+### **Security in VPC - NACL (Network Access Control List)**
+
+A network access control list (ACL) allows or denies specific inbound or outbound traffic at the subnet level. You can use the default network ACL for your VPC, or you can create a custom network ACL for your VPC with rules similar to your security group rules. Custom network ACLs add an additional layer of security to your VPC.
+
+- **Core Characteristics of AWS NACLs** :
+  - Subnet-Level Security : NACLs wrap around an entire subnet rather than individual instances. A subnet can be associated with only one NACL at a time, though a single NACL can be shared across multiple subnets.
+  - Stateless Filtering : Unlike security groups, NACLs are stateless. If you allow an inbound packet, you must explicitly create a matching outbound rule to allow the response to leave.
+  - Numbered Evaluation Order : NACLs evaluate rules in ascending numerical order (from low to high). Processing stops at the first rule that matches the packet.
+  - Allow and Deny Actions : Unlike security groups (which only support allow rules), NACLs support both allow and deny rules.
+  - Default Rules : Every NACL includes an un-deletable wildcard default rule (designated with an asterisk \*) at the very end that denies any traffic not explicitly matched.
+
+![NACL](https://docs.aws.amazon.com/images/vpc/latest/userguide/images/network-acl.png)
+
+- The following diagram shows a VPC with two subnets. Each subnet has a network ACL.
+  - When traffic enters the VPC (for example, from a peered VPC, VPN connection, or the internet), the router sends the traffic to its destination.
+  - Network ACL A determines which traffic destined for subnet 1 is allowed to enter subnet 1, and which traffic destined for a location outside subnet 1 is allowed to leave subnet 1.
+  - Similarly, network ACL B determines which traffic is allowed to enter and leave subnet 2.
+
+- **Network ACL basics** : The following are the basic things to know about network ACLs before you begin.
+- _Network ACL associations_ : Each subnet in your VPC must be associated with a network ACL. If you don't explicitly associate a subnet with a network ACL, the subnet is automatically associated with the default network ACL.
+  - You can create a custom network ACL and associate it with a subnet to allow or deny specific inbound or outbound traffic at the subnet level.
+  - You can associate a network ACL with multiple subnets. However, a subnet can be associated with only one network ACL at a time. When you associate a network ACL with a subnet, the previous association is removed.
+- _Network ACL rules_ : A network ACL has inbound rules and outbound rules. Each rule can either allow or deny traffic.
+  - Each rule has a number from 1 to 32766. We evaluate the rules in order, starting with the lowest numbered rule, when deciding whether allow or deny traffic.
+  - If the traffic matches a rule, the rule is applied and we do not evaluate any additional rules.
+  - The network ACL rules are evaluated, when traffic enters and leaves the subnet, not as it is routed within a subnet.
+  - NACLs are stateless, which means that information about previously sent or received traffic is not saved. If, for example, you create a NACL rule to allow specific inbound traffic to a subnet, responses to that traffic are not automatically allowed. You have to explicitly allow the rules for outbound traffic as well.
+  - This is in contrast to how security groups work. Security groups are stateful, which means that information about previously sent or received traffic is saved. If, for example, a security group allows inbound traffic to an EC2 instance, responses are automatically allowed regardless of outbound security group rules.
+
+#### Difference between Security Groups and NACL's
+
+| Feature              | Security Groups                                                           | Network ACLs (NACLs)                                                                |
+| -------------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Scope                | Resource / Elastic Network Interface (ENI) level (e.g., EC2, RDS, ALB)    | Subnet level (applies automatically to every resource inside the subnet)            |
+| Statefulness         | Stateful — return traffic for allowed requests is automatically permitted | Stateless — return traffic must be explicitly allowed in the opposite direction     |
+| Rule Actions         | Allow rules only (everything not explicitly allowed is implicitly denied) | Allow and Deny rules (supports explicit IP/port blacklisting)                       |
+| Rule Evaluation      | Evaluates all rules together before deciding whether to allow traffic     | Evaluates rules in numerical order from lowest to highest; stops at the first match |
+| Source / Destination | Supports CIDR blocks, IP addresses, and other Security Group IDs          | Supports CIDR blocks and IP addresses only                                          |
+| Default Behavior     | Custom SGs deny all inbound traffic and allow all outbound traffic        | Default NACL allows all inbound/outbound; custom NACLs deny everything by default   |
+
+- **Real-World Example 1: Public Web Server (HTTPS Traffic)** : When hosting a public web server on EC2, you must allow users on the internet to connect over HTTPS (port 443) and receive responses back.
+  - _Security Group Rules (WebServer-SG)_ : Because Security Groups are stateful, you only need an inbound rule for port 443. AWS automatically permits the outbound response.
+    - Inbound Rule : Allow Type HTTPS | Protocol TCP | Port 443 | Source 0.0.0.0/0 (All IPv4)
+    - Outbound Rule : Leave at default (or restrict to internal backend services); return traffic to the user is handled automatically
+  - _Custom NACL Rules (PublicSubnet-NACL)_ : Because NACLs are stateless, allowing port 443 inbound is not enough. When a client browser connects to port 443, it expects the reply on a temporary ephemeral port (typically 1024–65535). One point of agreement among users on AWS re:Post is that both inbound and outbound rules in a NACL must explicitly account for these ephemeral port ranges so response packets are not dropped.
+    - Inbound Rule (#100) : ALLOW | Protocol TCP | Port 443 | Source 0.0.0.0/0 (Allows incoming web requests)
+    - Inbound Rule (\*) : DENY | All Traffic | Source 0.0.0.0/0 (Default catch-all deny)
+    - Outbound Rule (#100) : ALLOW | Protocol TCP | Port Range 1024–65535 | Destination 0.0.0.0/0 (Allows return traffic to client browsers)
+    - Outbound Rule (\*) : DENY | All Traffic | Destination 0.0.0.0/0 (Default catch-all deny)
+
+- **Real-World Example 2: Blocking a Malicious IP Address** : Suppose your application logs show a DDoS attack or brute-force scan coming from 198.51.100.25/32, while you still want legitimate users (0.0.0.0/0) to reach your site.
+  - Why Security Groups cannot do this : Security Groups only support ALLOW rules. You cannot add a rule to block a single IP while keeping 0.0.0.0/0 open.
+  - How a NACL solves it : NACLs support explicit DENY rules and process rules in numerical order. You add a lower-numbered rule to block the attacker before the general allow rule runs:
+    - Inbound Rule (#50) : DENY | All Traffic | Source 198.51.100.25/32 (Evaluated first — drops malicious traffic immediately)
+    - Inbound Rule (#100) : ALLOW | Protocol TCP | Port 443 | Source 0.0.0.0/0 (Evaluated second — lets normal users through)
+
+- **Real-World Example 3: Multi-Tier Database Isolation** : In a three-tier architecture, your database subnet (10.0.3.0/24) should only communicate with your application tier (10.0.2.0/24) on PostgreSQL port 5432.
+  - Security Group Chaining (Database-SG) : Instead of hardcoding private IP addresses that change as Auto Scaling launches or terminates servers, you reference the application tier's Security Group ID directly:
+    - Inbound Rule : Allow Type PostgreSQL | Protocol TCP | Port 5432 | Source sg-0abc12345app (Application Tier SG)
+  - Subnet-Wide Guardrail (DatabaseSubnet-NACL) : Even if an administrator accidentally opens a Security Group rule to 0.0.0.0/0 on a database instance, the NACL acts as a hard boundary restricting traffic to the application subnet CIDR :
+    - Inbound Rule (#100) : ALLOW | Protocol TCP | Port 5432 | Source 10.0.2.0/24 (App Subnet CIDR)
+    - Outbound Rule (#100) : ALLOW | Protocol TCP | Port Range 1024–65535 | Destination 10.0.2.0/24 (Return traffic to App Subnet)
