@@ -54,3 +54,22 @@ AWS Fargate is a serverless, pay-as-you-go compute engine for running containers
   - Seamless Integration with ECS and EKS : Fargate works seamlessly with Amazon ECS and EKS, allowing you to use familiar AWS services for container orchestration.
   - Automatic Scaling : Fargate automatically adjusts your resources based on your application’s needs, scaling up or down depending on traffic or demand.
   - Security and Compliance : AWS Fargate integrates with AWS security services like IAM and VPC to ensure your applications are secure, and your data is protected.
+
+### AWS Lambda
+
+AWS Lambda is a serverless, event-driven compute service that runs your code in response to events and automatically manages the underlying compute resources. You upload your code as a "Lambda function," and AWS handles server provisioning, patching, high availability, and scaling
+
+- **How It Works** :
+  - Event-driven execution : Code runs only when triggered by an event—such as an HTTP request via Amazon API Gateway, a file upload to Amazon S3, a database update in Amazon DynamoDB, or a message in Amazon SQS.
+  - Automatic scaling : Lambda spins up isolated execution environments (powered by Firecracker microVMs) in milliseconds to match incoming traffic—scaling from zero to thousands of parallel executions without configuration.
+  - Pay-as-you-go pricing : You pay only for the number of requests ($0.20 per million) and the duration your code executes (measured in milliseconds and allocated memory), with zero charges when your code is idle
+
+- **The Event-Driven Model** : Every Lambda execution follows a three-part pattern,
+  - An event occurs, such as a file uploaded to S3, an HTTP request hitting API Gateway, or a message arriving in an SQS queue.
+  - AWS spins up your code to process that specific event.
+  - The function performs an action, such as saving data to DynamoDB, returning an HTTP response, or writing a processed file back to S3.
+
+- **Key Specifications & Limits** :
+  - Supported languages : Native runtimes include Node.js, Python, Java, Go, .NET (C#), and Ruby, plus support for custom runtimes and container images.
+  - Execution limits : Functions can allocate between 128 MB and 10,240 MB of memory and run for a maximum timeout of 15 minutes (900 seconds) per invocation.
+  - Cold starts : When a function scales up after being idle, initializing a new microVM causes a brief latency delay known as a "cold start". Features like Provisioned Concurrency and Lambda SnapStart keep environments pre-initialized to eliminate this delay.
