@@ -15,7 +15,7 @@ AWS CloudFormation is an Infrastructure as Code (IaC) service that lets you mode
 - _**Stacks**_ : A collection of AWS resources created, updated, and deleted together from a template as one manageable unit. When you use CloudFormation, you manage related resources as a single unit called a stack. You create, update, and delete a collection of resources by creating, updating, and deleting stacks.
   - All the resources in a stack are defined by the stack's CloudFormation template. Suppose you created a template that includes an Auto Scaling group, Elastic Load Balancing load balancer, and an Amazon Relational Database Service (Amazon RDS) database instance. To create those resources, you create a stack by submitting the template that you created, and CloudFormation provisions all those resources for you.
 
-- **Change Sets** : Previews of proposed modifications to a stack so you can check for risky updates or resource replacements before applying them. If you need to make changes to the running resources in a stack, you update the stack.
+- _**Change Sets**_ : Previews of proposed modifications to a stack so you can check for risky updates or resource replacements before applying them. If you need to make changes to the running resources in a stack, you update the stack.
   - Before making changes to your resources, you can generate a change set, which is a summary of your proposed changes. Change sets allow you to see how your changes might impact your running resources, especially for critical resources, before implementing them.
   - For example, if you change the name of an Amazon RDS database instance, CloudFormation will create a new database and delete the old one. You will lose the data in the old database unless you've already backed it up. If you generate a change set, you will see that your change will cause your database to be replaced, and you will be able to plan accordingly before you update your stack.
   - _Updating a stack with a change set_ : When you need to update your stack's resources, you can modify the stack's template. You don't need to create a new stack and delete the old one. To update a stack, create a change set by submitting a modified version of the original stack template, different input parameter values, or both.
@@ -23,7 +23,7 @@ AWS CloudFormation is an Infrastructure as Code (IaC) service that lets you mode
 
     ![CloudFormationChangeSet](https://docs.aws.amazon.com/images/AWSCloudFormation/latest/UserGuide/images/update-stack-diagram.png)
 
-- **Drift Detection** : AWS CloudFormation drift detection identifies whether your stack’s actual live resources have deviated from their expected template configurations due to out-of-band changes (such as manual edits in the AWS Management Console or CLI).
+- _**Drift Detection**_ : AWS CloudFormation drift detection identifies whether your stack’s actual live resources have deviated from their expected template configurations due to out-of-band changes (such as manual edits in the AWS Management Console or CLI).
   - How It Works & Drift Statuses :-
     - CloudFormation compares the current property values of supported resources against the values explicitly defined in your template.
     - Stack Drift Statuses : A stack is marked as IN_SYNC if all supported resources match the template, DRIFTED if at least one resource differs, or NOT_CHECKED if drift detection hasn't been run.
@@ -39,9 +39,9 @@ AWS CloudFormation is an Infrastructure as Code (IaC) service that lets you mode
 - Before provisioning resources, CloudFormation runs pre-deployment validation on your template. This checks for common errors such as invalid property syntax and resource name conflicts. If validation fails, the operation stops before any resources are created. Validation runs automatically on all Create Stack, Update Stack, and Create Change Set operations. To skip validation, you can use the _DisableValidation_ parameter.
 - After all the resources have been created, CloudFormation reports that your stack has been created. You can then start using the resources in your stack. If stack creation fails, CloudFormation rolls back your changes by deleting the resources that it created.
 
-- **Deployment time** : How long a stack operation takes depends on the resources in the stack. CloudFormation provisions independent resources in parallel and moves forward as soon as each resource is ready. In workloads that include resources such as database instances, load balancers, or NAT gateways, those resources take longer to become ready to serve traffic and account for most of the deployment time.
+- _**Deployment time**_ : How long a stack operation takes depends on the resources in the stack. CloudFormation provisions independent resources in parallel and moves forward as soon as each resource is ready. In workloads that include resources such as database instances, load balancers, or NAT gateways, those resources take longer to become ready to serve traffic and account for most of the deployment time.
 
-- **Express mode** : For faster stack operations during development, use express mode. Express mode completes stack operations as soon as CloudFormation applies the resource configuration, without waiting for resources to fully stabilize.
+- _**Express mode**_ : For faster stack operations during development, use express mode. Express mode completes stack operations as soon as CloudFormation applies the resource configuration, without waiting for resources to fully stabilize.
 
 ### AWS Cloud Development Kit
 
