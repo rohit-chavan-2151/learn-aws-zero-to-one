@@ -100,4 +100,26 @@ The following diagram depicts two Beanstalk Cluster environments sharing an EKS 
   - The following diagram illustrates Elastic Beanstalk workflow :-
     ![BeanstalkWorfflow](https://docs.aws.amazon.com/images/elasticbeanstalk/latest/dg/images/clearbox-flow-00.png)
 
+- It consists of three architecture models :
+  i. Single Instance deployment : good for dev
+  ii. LB + ASG : great for production or pre-production web applications
+  iii. ASG only : great for non-web apps in production (workers, etc..)
+
+- **Difference between AWS Cloudformation & AWS Elastic Beanstalk** :
+
+| Feature                 | AWS Elastic Beanstalk                                                        | AWS CloudFormation                                                     |
+| ----------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Primary Role            | Platform as a Service (PaaS) for app deployment                              | Infrastructure as Code (IaC) for resource provisioning                 |
+| Main Focus              | Application code, runtimes, and scaling                                      | Defining the exact state of AWS infrastructure                         |
+| Scope of Services       | Limited to compute and app-hosting stacks (EC2, ELB, Auto Scaling, RDS, EKS) | Supports virtually every AWS service and resource type                 |
+| Configuration Input     | Upload source code/containers + optional .ebextensions or config files       | Declarative YAML or JSON templates                                     |
+| Control vs. Convenience | High convenience; abstracts away server setup while keeping basic knobs      | Granular control over every networking, security, and resource setting |
+| Target Audience         | Application developers who want minimal infrastructure overhead              | DevOps and systems engineers managing complex cloud architectures      |
+
+- **How They Work Together** : They are not strictly mutually exclusive—in fact, Elastic Beanstalk uses CloudFormation under the hood to spin up the EC2 instances, load balancers, and Auto Scaling groups for your environment. Furthermore, you can write a CloudFormation template to create and manage an Elastic Beanstalk application alongside external resources (like a standalone database, S3 bucket, or custom VPC) in a single repeatable stack.
+
+- **When to Choose Which** :
+  - Choose Elastic Beanstalk if you want to deploy a standard web app, API, or Docker container quickly without writing infrastructure templates from scratch.
+  - Choose CloudFormation if you need to replicate entire multi-service environments across accounts/regions, track infrastructure changes in Git, detect configuration drift, or manage non-application resources (like IAM policies, VPCs, or serverless architectures)
+
 ---
