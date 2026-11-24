@@ -55,6 +55,8 @@ AWS Fargate is a serverless, pay-as-you-go compute engine for running containers
   - Automatic Scaling : Fargate automatically adjusts your resources based on your application’s needs, scaling up or down depending on traffic or demand.
   - Security and Compliance : AWS Fargate integrates with AWS security services like IAM and VPC to ensure your applications are secure, and your data is protected.
 
+---
+
 ### AWS Lambda
 
 AWS Lambda is a serverless, event-driven compute service that runs your code in response to events and automatically manages the underlying compute resources. You upload your code as a "Lambda function," and AWS handles server provisioning, patching, high availability, and scaling
@@ -73,3 +75,5 @@ AWS Lambda is a serverless, event-driven compute service that runs your code in 
   - Supported languages : Native runtimes include Node.js, Python, Java, Go, .NET (C#), and Ruby, plus support for custom runtimes and container images.
   - Execution limits : Functions can allocate between 128 MB and 10,240 MB of memory and run for a maximum timeout of 15 minutes (900 seconds) per invocation.
   - Cold starts : When a function scales up after being idle, initializing a new microVM causes a brief latency delay known as a "cold start". Features like Provisioned Concurrency and Lambda SnapStart keep environments pre-initialized to eliminate this delay.
+
+---

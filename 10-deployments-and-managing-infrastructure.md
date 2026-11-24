@@ -43,6 +43,8 @@ AWS CloudFormation is an Infrastructure as Code (IaC) service that lets you mode
 
 - _**Express mode**_ : For faster stack operations during development, use express mode. Express mode completes stack operations as soon as CloudFormation applies the resource configuration, without waiting for resources to fully stabilize.
 
+---
+
 ### AWS Cloud Development Kit
 
 The AWS Cloud Development Kit (AWS CDK) is an open-source framework for defining cloud infrastructure as code using programming languages and provisioning it via AWS CloudFormation. It supports TypeScript, JavaScript, Python, Java, C#/.NET, and Go.
@@ -54,3 +56,48 @@ The AWS Cloud Development Kit (AWS CDK) is an open-source framework for defining
     - L2 : Curated constructs with sensible defaults, helper methods, and automatic IAM permissions.
     - L3 (Patterns) : Multi-resource architectural patterns for common workflows.
   - CDK Blocks : An expansion that packages infrastructure constructs alongside application code and local implementations for capabilities like databases, authentication, file storage, and AI agents.
+
+---
+
+### AWS Elastic Beanstalk
+
+- AWS Elastic Beanstalk is a Platform as a Service (PaaS) and orchestration tool that automates the deployment, scaling, and management of web applications on AWS. Instead of manually configuring servers, load balancers, and networks, you upload your application code or container image, and Elastic Beanstalk provisions and manages the underlying AWS infrastructure for you.
+- With Elastic Beanstalk you can deploy web applications into the AWS Cloud on a variety of supported platforms. You build and deploy your applications. Elastic Beanstalk provisions Amazon EC2 instances or EKS clusters, configures load balancing, sets up health monitoring, and dynamically scales your environment.
+
+- **Some Core Features** :-
+  - Automated Infrastructure : Automatically sets up and manages underlying services like Amazon EC2, Elastic Load Balancing (ELB), Auto Scaling groups, Amazon S3, and CloudWatch.
+  - Broad Runtime Support : Supports applications built with Java, .NET, PHP, Node.js, Python, Ruby, Go, and Docker containers on Linux or Windows servers.
+  - Full Resource Control : Unlike more restrictive PaaS platforms, Elastic Beanstalk lets you access and customize the underlying AWS resources (such as changing EC2 instance types or modifying security groups) whenever you need granular control.
+  - Deployment Strategies : Supports multiple update methods—including All-at-Once, Rolling, Immutable, and Blue/Green deployments—to minimize downtime during releases.
+  - Managed Updates : Automatically applies OS and platform patches during scheduled maintenance windows.
+
+- Elastic Beanstalk offers two modes : _Standard and Cluster_.
+  - Beanstalk Standard runs applications directly on Amazon EC2, is highly cost effective when running smaller, or fewer, applications, and supports Windows applications.
+  - Beanstalk Cluster runs applications on Amazon EKS and enables faster deployments, faster autoscaling, improved resource utilization when running multiple environments, and managed OpenTelemetry integration.
+
+| Mode          | Underlying Compute              | Best For                                                                                                           |
+| ------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------ |
+| Standard Mode | Dedicated Amazon EC2 instances  | Single applications, lightweight workloads, and Windows/.NET apps                                                  |
+| Cluster Mode  | Managed Amazon EKS (Kubernetes) | Consolidating multiple containerized apps onto shared infrastructure for faster scaling and bin-packing efficiency |
+
+The following diagram depicts two Beanstalk Standard environments: one web server environment and one worker environment :-
+
+![BeanstalkModes](https://docs.aws.amazon.com/images/elasticbeanstalk/latest/dg/images/aeb-overview.png)
+
+The following diagram depicts two Beanstalk Cluster environments sharing an EKS cluster :-
+
+![BeanstalkCluster](https://docs.aws.amazon.com/images/elasticbeanstalk/latest/dg/images/aeb-overview-cluster.png)
+
+- **Supported Platforms** :
+  - Elastic Beanstalk supports applications developed in Go, Java, .NET, Node.js, PHP, Python, and Ruby. Elastic Beanstalk also supports Docker containers, where you can choose your own programming language and application dependencies.
+  - When you deploy your application, Elastic Beanstalk builds the selected supported platform version and provisions one or more AWS resources in your AWS account to run your application.
+  - With Beanstalk Cluster mode there is no platform involved; you provide a container image, or source that Elastic Beanstalk builds into one.
+  - You can interact with Elastic Beanstalk through the Elastic Beanstalk console, the AWS Command Line Interface (AWS CLI), the official GitHub Action, or the EB CLI, a high-level command line tool designed specifically for Elastic Beanstalk. You can also define your environments as infrastructure as code, with AWS CloudFormation (CloudFormation) or with Terraform through the AWS provider.
+
+- **Application deploy workflow** :
+  - To use Elastic Beanstalk, you create an application, then upload your application source bundle to Elastic Beanstalk. Next, you provide information about the application, and Elastic Beanstalk automatically launches an environment and creates and configures the AWS resources needed to run your code.
+  - After you create and deploy your application and your environment is launched, you can manage your environment and deploy new application versions. Information about the application—including metrics, events, and environment status—is made available through the Elastic Beanstalk console, APIs, and Command Line Interfaces.
+  - The following diagram illustrates Elastic Beanstalk workflow :-
+    ![BeanstalkWorfflow](https://docs.aws.amazon.com/images/elasticbeanstalk/latest/dg/images/clearbox-flow-00.png)
+
+---
