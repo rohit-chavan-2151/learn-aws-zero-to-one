@@ -123,3 +123,103 @@ The following diagram depicts two Beanstalk Cluster environments sharing an EKS 
   - Choose CloudFormation if you need to replicate entire multi-service environments across accounts/regions, track infrastructure changes in Git, detect configuration drift, or manage non-application resources (like IAM policies, VPCs, or serverless architectures)
 
 ---
+
+#### AWS CodeDeploy
+
+AWS CodeDeploy is a managed deployment service that automates application releases to Amazon EC2 instances, on-premises servers, AWS Lambda functions, and Amazon ECS services. It pulls code and artifacts from Amazon S3, GitHub, or Bitbucket, supports automatic rollbacks, and works without requiring changes to your existing application code.
+
+- You can deploy a nearly unlimited variety of application content, including: Code, Serverless AWS Lambda functions, Web and configuration files, Executables, Packages, Scripts, Multimedia files
+- CodeDeploy can deploy application content that runs on a server and is stored in Amazon S3 buckets, GitHub repositories, or Bitbucket repositories. CodeDeploy can also deploy a serverless Lambda function. You do not need to make changes to your existing code before you can use CodeDeploy.
+- CodeDeploy makes it easier for you to:
+  - Rapidly release new features
+  - Update AWS Lambda function versions
+  - Avoid downtime during application deployment
+  - Handle the complexity of updating your applications, without many of the risks associated with error-prone manual deployments.
+- The service scales with your infrastructure so you can easily deploy to one instance or thousands.
+
+- **Some key concepts of CodeDeploy** :
+  - Application : The unique name or container identifying the software you want to deploy.
+  - Revision : A specific version of your application code, configuration files, or Lambda definition paired with an AppSpec file (appspec.yml or appspec.json).
+  - Deployment Group : The target set of EC2 instances, on-premises servers, Lambda functions, or ECS services, along with deployment rules, triggers, and rollback settings.
+  - Deployment Configuration : Rules that control rollout pace and health thresholds (such as one-at-a-time, half-at-a-time, or all-at-once on EC2/on-premises, or canary/linear traffic shifting on Lambda and ECS).
+  - AppSpec File & Lifecycle Hooks : A manifest defining file destinations and scripts that run at specific stages (such as BeforeInstall, AfterInstall, ApplicationStart, and ValidateService).
+
+- **Benefits of AWS CodeDeploy** : CodeDeploy offers these benefits :-
+  - _Server, serverless, and container applications_ : CodeDeploy lets you deploy both traditional applications on servers and applications that deploy a serverless AWS Lambda function version or an Amazon ECS application.
+  - _Automated deployments_ : CodeDeploy fully automates your application deployments across your development, test, and production environments. CodeDeploy scales with your infrastructure so that you can deploy to one instance or thousands.
+  - _Minimize downtime_ : If your application uses the EC2/On-Premises compute platform, CodeDeploy helps maximize your application availability.
+    - During an in-place deployment, CodeDeploy performs a rolling update across Amazon EC2 instances. You can specify the number of instances to be taken offline at a time for updates.
+    - During a blue/green deployment, the latest application revision is installed on replacement instances. Traffic is rerouted to these instances when you choose, either immediately or as soon as you are done testing the new environment. For both deployment types, CodeDeploy tracks application health according to rules you configure.
+  - _Stop and roll back_ : You can automatically or manually stop and roll back deployments if there are errors.
+  - _Centralized control_ : You can launch and track the status of your deployments through the CodeDeploy console or the AWS CLI. You receive a report that lists when each application revision was deployed and to which Amazon EC2 instances.
+  - _Easy to adopt_ : CodeDeploy is platform-agnostic and works with any application. You can easily reuse your setup code. CodeDeploy can also integrate with your software release process or continuous delivery toolchain.
+  - _Concurrent deployments_ : If you have more than one application that uses the EC2/On-Premises compute platform, CodeDeploy can deploy them concurrently to the same set of instances.
+
+- **Overview of CodeDeploy compute platforms** : CodeDeploy is able to deploy applications to three compute platforms:
+  i. _EC2/On-Premises_ : Describes instances of physical servers that can be Amazon EC2 cloud instances, on-premises servers, or both. Applications created using the EC2/On-Premises compute platform can be composed of executable files, configuration files, images, and more. Deployments that use the EC2/On-Premises compute platform manage the way in which traffic is directed to instances by using an in-place or blue/green deployment type.
+  ii. _AWS Lambda_ : Used to deploy applications that consist of an updated version of a Lambda function. AWS Lambda manages the Lambda function in a serverless compute environment made up of a high-availability compute structure. All administration of the compute resources is performed by AWS Lambda.
+  iii. _Amazon ECS_ : Used to deploy an Amazon ECS containerized application as a task set. CodeDeploy performs a blue/green deployment by installing an updated version of the application as a new replacement task set. CodeDeploy reroutes production traffic from the original application task set to the replacement task set. The original task set is terminated after a successful deployment.
+
+- **Overview of CodeDeploy deployment types** : CodeDeploy provides two deployment type options:
+  - _In-place deployment_ : The application on each instance in the deployment group is stopped, the latest application revision is installed, and the new version of the application is started and validated. You can use a load balancer so that each instance is deregistered during its deployment and then restored to service after the deployment is complete. Only deployments that use the EC2/On-Premises compute platform can use in-place deployments.
+  - _Blue/green deployment_ : The behavior of your deployment depends on which compute platform you use:
+    - **Blue/green on an EC2/On-Premises compute platform** : The instances in a deployment group (the original environment) are replaced by a different set of instances (the replacement environment) using these steps :-
+      - Instances are provisioned for the replacement environment.
+      - The latest application revision is installed on the replacement instances.
+      - An optional wait time occurs for activities such as application testing and system verification.
+      - Instances in the replacement environment are registered with one or more Elastic Load Balancing load balancers, causing traffic to be rerouted to them. Instances in the original environment are deregistered and can be terminated or kept running for other uses.
+    - **Blue/green on an AWS Lambda or Amazon ECS compute platform** : Traffic is shifted in increments according to a canary, linear, or all-at-once deployment configuration.
+    - **Blue/green deployments through CloudFormation** : Traffic is shifted from your current resources to your updated resources as part of an CloudFormation stack update. Currently, only ECS blue/green deployments are supported.
+
+#### AWS CodeCommit :
+
+CodeCommit is a secure, highly scalable, managed source control service that hosts private Git repositories. CodeCommit eliminates the need for you to manage your own source control system or worry about scaling its infrastructure. You can use CodeCommit to store anything from code to binaries. It supports the standard functionality of Git, so it works seamlessly with your existing Git-based tools.
+
+- With CodeCommit, you can :
+  - _Benefit from a fully managed service hosted by AWS_ : CodeCommit provides high service availability and durability and eliminates the administrative overhead of managing your own hardware and software. There is no hardware to provision and scale and no server software to install, configure, and update.
+  - _Store your code securely_ : CodeCommit repositories are encrypted at rest as well as in transit.
+  - _Work collaboratively on code_ : CodeCommit repositories support pull requests, where users can review and comment on each other's code changes before merging them to branches; notifications that automatically send emails to users about pull requests and comments; and more.
+  - _Easily scale your version control projects_ : CodeCommit repositories can scale up to meet your development needs. The service can handle repositories with large numbers of files or branches, large file sizes, and lengthy revision histories.
+  - _Store anything, anytime_ : CodeCommit has no limit on the size of your repositories or on the file types you can store.
+  - _Integrate with other AWS and third-party services_ : CodeCommit keeps your repositories close to your other production resources in the AWS Cloud, which helps increase the speed and frequency of your development lifecycle. It is integrated with IAM and can be used with other AWS services and in parallel with other repositories.
+  - Easily migrate files from other remote repositories. You can migrate to CodeCommit from any Git-based repository.
+  - Use the Git tools you already know. CodeCommit supports Git commands as well as its own AWS CLI commands and APIs.
+
+- **How does CodeCommit work?** : CodeCommit is familiar to users of Git-based repositories, but even those unfamiliar should find the transition to CodeCommit relatively simple. CodeCommit provides a console for the easy creation of repositories and the listing of existing repositories and branches. In a few simple steps, users can find information about a repository and clone it to their computer, creating a local repo where they can make changes and then push them to the CodeCommit repository. Users can work from the command line on their local machines or use a GUI-based editor.
+
+#### AWS CodeBuild :
+
+- AWS CodeBuild is a fully managed build service in the cloud. CodeBuild compiles your source code, runs unit tests, and produces artifacts that are ready to deploy. CodeBuild eliminates the need to provision, manage, and scale your own build servers.
+- It provides prepackaged build environments for popular programming languages and build tools such as Apache Maven, Gradle, and more. You can also customize build environments in CodeBuild to use your own build tools. CodeBuild scales automatically to meet peak build requests. CodeBuild provides these benefits :
+  - Fully managed – CodeBuild eliminates the need to set up, patch, update, and manage your own build servers.
+  - On demand – CodeBuild scales on demand to meet your build needs. You pay only for the number of build minutes you consume.
+  - Out of the box – CodeBuild provides preconfigured build environments for the most popular programming languages. All you need to do is point to your build script to start your first build.
+- You can use the AWS CodeBuild or AWS CodePipeline console to run CodeBuild. You can also automate the running of CodeBuild by using the AWS Command Line Interface (AWS CLI) or the AWS SDKs.
+
+#### AWS CodePipeline :
+
+AWS CodePipeline is a managed continuous integration and continuous delivery (CI/CD) service that automates software build, test, and deployment workflows whenever code changes. It orchestrates AWS services and third-party tools across defined pipeline stages.
+
+#### AWS CodeArtifact :
+
+AWS CodeArtifact is a fully managed artifact repository service used to securely store, publish, and share software packages and dependencies across development teams and CI/CD pipelines. It works with build tools and package managers such as Maven, Gradle, npm, yarn, pip, twine, and NuGet.
+
+- Some Key Concepts & Features :
+  - Domains : Top-level containers that group multiple repositories, share package storage across them, and enforce centralized access policies.
+  - Repositories : Store package versions and connect to upstream repositories or public registries (like npmjs or Maven Central) to cache external dependencies and protect builds against public outages.
+  - Security & Networking : Integrates with AWS IAM for access control, AWS KMS for encryption, and AWS PrivateLink for private access within a VPC without traversing the public internet.
+  - CI/CD Integration : Connects with tools like AWS CodeBuild and CodePipeline to pull dependencies and publish internal build artifacts.
+
+#### AWS Systems Manager :
+
+AWS Systems Manager is a centralized operations and management service for viewing, controlling, and automating infrastructure across AWS, on-premises, and multicloud environments. It uses the open-source SSM Agent and IAM permissions to manage nodes without opening inbound SSH/RDP ports or maintaining bastion hosts.
+
+- Key Capabilities :
+  - _Node Management_ : Use Fleet Manager to view and manage Linux, Windows, and hybrid nodes, Session Manager for browser/CLI terminal access without key pairs, and Run Command for remote ad-hoc execution.
+  - _Configuration & Patching_ : Enforce desired configurations with State Manager, scan and install OS/application updates with Patch Manager, and schedule execution windows with Maintenance Windows.
+  - _Automation & Change Control_ : Run multi-step workflows (runbooks) across AWS, Azure, and Google Cloud via Automation, and manage approval workflows through Change Manager.
+  - _Visibility & Parameters_ : Track resource health and compliance across accounts using Explorer, Inventory, and Compliance, and store configuration data or secrets in Parameter Store (integrated with AWS KMS). (Note: Application Manager is no longer available to new customers.)
+
+- You can run Systems Manager with setup,
+  - SSM Agent : Installed and running on target nodes (pre-installed on many Linux/Windows AMIs).
+  - IAM Permissions : An instance profile/role (such as AmazonSSMManagedInstanceCore) allowing communication over HTTPS (port 443) via ssm, ec2messages, and ssmmessages endpoints
