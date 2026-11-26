@@ -186,3 +186,55 @@ Amazon S3 Replication is a fully managed, automatic, and asynchronous feature th
 - Cross-Account Ownership : When replicating to another AWS account, you can change object ownership to the destination account to ensure the receiving party has full access control.
 
 ![sharedResponsibilityModelForS3](images/sharedResponsibilityModelForS3.png)
+
+---
+
+### Encryption in S3
+
+Amazon S3 protects data using encryption at rest (server-side or client-side) and encryption in transit (HTTPS/TLS). By default, S3 automatically applies server-side encryption with S3 managed keys (SSE-S3) to all new buckets and object uploads at no extra cost. S3 Files provides comprehensive encryption capabilities to protect your data both at rest and in transit.
+
+- **Encryption at rest** : Your S3 bucket is encrypted using Amazon S3's encryption mechanisms. S3 Files encrypts data at rest in the S3 file system using server-side encryption.
+  - Server-side encryption is the encryption of data at its destination by the application or service that receives it. In S3 file systems, data and metadata are encrypted by default before being written to storage and are automatically decrypted when read. These processes are handled transparently by S3 Files, so you don't need to modify your applications.
+  - All data at rest in the file system is encrypted using one of the following methods :-
+    - (Default) Server-side encryption with Amazon S3-managed encryption keys (SSE-S3)
+    - Server-side encryption with AWS Key Management Service (SSE-KMS)
+
+- **Data protection with Encryption** : Data protection refers to protecting data while it's in transit (as it travels to and from Amazon S3) and at rest (while it is stored on disks in Amazon S3 data centers). You can protect data in transit by using Secure Socket Layer/Transport Layer Security (SSL/TLS) including hybrid post-quantum key exchange or client-side encryption. For protecting data at rest in Amazon S3, you have the following options :
+  - _**Server-side encryption**_ : Amazon S3 encrypts your objects before saving them on disks in AWS data centers and then decrypts the objects when you download them.
+    - All Amazon S3 buckets have encryption configured by default, and all new objects that are uploaded to an S3 bucket are automatically encrypted at rest. Server-side encryption with Amazon S3 managed keys (SSE-S3) is the default encryption configuration for every bucket in Amazon S3.
+    - To use a different type of encryption, you can either specify the type of server-side encryption to use in your S3 PUT requests, or you can update the default encryption configuration in the destination bucket.
+    - If you want to specify a different encryption type in your PUT requests, you can use server-side encryption with AWS Key Management Service (AWS KMS) keys (SSE-KMS), dual-layer server-side encryption with AWS KMS keys (DSSE-KMS), or server-side encryption with customer-provided keys (SSE-C).
+    - If you want to set a different default encryption configuration in the destination bucket, you can use SSE-KMS or DSSE-KMS.
+    - When you change the default encryption configuration of your bucket to SSE-KMS, the encryption type of the existing Amazon S3 objects in the bucket is not changed. To change the encryption type of your pre-existing objects after updating the default encryption configuration to SSE-KMS, you can use Amazon S3 Batch Operations. You provide S3 Batch Operations with a list of objects, and Batch Operations calls the respective API operation.
+      - _Server-side encryption with Amazon S3 managed keys (SSE-S3)_ : All Amazon S3 buckets have encryption configured by default. The default option for server-side encryption is with Amazon S3 managed keys (SSE-S3). Each object is encrypted with a unique key. As an additional safeguard, SSE-S3 encrypts the key itself with a root key that it regularly rotates. SSE-S3 uses one of the strongest block ciphers available, 256-bit Advanced Encryption Standard (AES-256), to encrypt your data.
+      - _Server-side encryption with AWS Key Management Service (AWS KMS) keys (SSE-KMS)_ : Server-side encryption with AWS KMS keys (SSE-KMS) is provided through an integration of the AWS KMS service with Amazon S3. With AWS KMS, you have more control over your keys. For example, you can view separate keys, edit control policies, and follow the keys in AWS CloudTrail. Additionally, you can create and manage customer managed keys or use AWS managed keys that are unique to you, your service, and your Region.
+      - _Dual-layer server-side encryption with AWS Key Management Service (AWS KMS) keys (DSSE-KMS)_ : Dual-layer server-side encryption with AWS KMS keys (DSSE-KMS) is similar to SSE-KMS, but DSSE-KMS applies two independent layers of AES-256 encryption instead of one layer: first using a AWS KMS data encryption key, then using a separate Amazon S3-managed encryption key. Because both layers of encryption are applied to an object on the server side, you can use a wide range of AWS services and tools to analyze data in S3 while using an encryption method that can satisfy compliance requirements for multilayer encryption.
+  - _**Client-side encryption**_ : Client-side encryption is the act of encrypting your data locally to help ensure its security in transit and at rest. To encrypt your objects before you send them to Amazon S3, use the Amazon S3 Encryption Client.
+    - When your objects are encrypted in this manner, your objects aren't exposed to any third party, including AWS. Amazon S3 receives your objects already encrypted; Amazon S3 does not play a role in encrypting or decrypting your objects.
+    - You can use both the Amazon S3 Encryption Client and server-side encryption to encrypt your data. When you send encrypted objects to Amazon S3, Amazon S3 doesn't recognize the objects as being encrypted, it only detects typical objects.
+    - The Amazon S3 Encryption Client works as an intermediary between you and Amazon S3. After you instantiate the Amazon S3 Encryption Client, your objects are automatically encrypted and decrypted as part of your Amazon S3 PutObject and GetObject requests.
+    - Your objects are all encrypted with a unique data key. The Amazon S3 Encryption Client does not use or interact with bucket keys, even if you specify a KMS key as your wrapping key.
+
+- **S3 Files key policies for AWS KMS** : Key policies are the primary way to control access to customer managed keys. The following list describes all the AWS KMS–related permissions that are supported by S3 Files for encrypting file systems at rest :-
+  - _kms:Encrypt_ : (Optional) Encrypts plaintext into ciphertext. This permission is included in the default key policy.
+  - _kms:Decrypt_ : (Required) Decrypts ciphertext. Ciphertext is plaintext that has been previously encrypted. This permission is included in the default key policy.
+  - _kms:ReEncrypt_ : (Optional) Encrypts data on the server side with a new customer managed key, without exposing the plaintext of the data on the client side. The data is first decrypted and then re-encrypted. This permission is included in the default key policy.
+  - _kms:GenerateDataKeyWithoutPlaintext_ : (Required) Returns a data encryption key encrypted under a customer managed key. This permission is included in the default key policy under kms:GenerateDataKey\*.
+  - _kms:CreateGrant_ : (Required) Adds a grant to a key to specify who can use the key and under what conditions. Grants are alternate permission mechanisms to key policies. This permission is included in the default key policy.
+  - _kms:DescribeKey_ : (Required) Provides detailed information about the specified customer managed key. This permission is included in the default key policy.
+  - _kms:ListAliases_ : (Optional) Lists all of the key aliases in the account. When you use the console to create an encrypted file system, this permission populates the Select KMS key list. This permission is included in the default key policy.
+
+- **Key states and their effects** : The state of your KMS key directly affects access to your encrypted file system:
+  - Enabled : Normal operation - full read and write access to the file system.
+  - Disabled : File system becomes inaccessible after some time. Can be re-enabled.
+  - Pending deletion : File system becomes inaccessible. Deletion can be canceled during the waiting period. Note that after cancelling key deletion, the key needs to be moved to enabled state.
+  - Deleted : File system permanently inaccessible. This action cannot be reversed.
+
+- **Encryption in transit** : S3 Files requires encryption of data in transit using Transport Layer Security (TLS). When you mount your file system using the mount helper, all data traveling between your client and the file system is encrypted using TLS.
+  - The mount helper initializes efs-proxy process to establish a secure TLS connection with your file system. The mount helper also creates a process called amazon-efs-mount-watchdog that monitors the health of mounts, and is started automatically the first time an S3 file system is mounted. It ensures that each mount's efs-proxy process is running, and stops the process when the file system is unmounted. If for some reason the process is terminated unexpectedly, the watchdog process restarts it.
+  - The following describes how TLS encryption in transit works:
+    - A secure TLS connection is established between your client and the file system
+    - All NFS traffic is routed through this encrypted connection
+    - Data is encrypted before transmission and decrypted upon receipt
+
+---
