@@ -172,6 +172,7 @@ Amazon EBS provides several native features designed to manage enterprise storag
   - In State 2, the volume still contains 10 GiB of data, but only 4 GiB have changed after Snap A was taken. Snap B is an incremental snapshot. It needs to back up only the 4 GiB that changed. The other 6 GiB of unchanged data, which are already backed up in Snap A, are referenced by Snap B rather than being backed up again. This is indicated by the dashed arrow.
   - In State 3, 2 GiB of data have been added to the volume, for a total of 12 GiB, after Snap B was taken. Snap C is an incremental snapshot. It needs to back up only the 2 GiB that were added after Snap B was taken. As shown by the dashed arrows, Snap C also references the 4 GiB of data stored in Snap B, and the 6 GiB of data stored in Snap A.
   - The total storage required for the three snapshots is 16 GiB total. This accounts for 10 GiB for Snap A, 4 GiB for Snap B, and 2 GiB for Snap C.
+
     ![MultipleSnapshotsSameVolume](https://docs.aws.amazon.com/images/ebs/latest/userguide/images/snapshot_1a.png)
 
 - **Incremental snapshots of different volumes** :
@@ -181,6 +182,7 @@ Amazon EBS provides several native features designed to manage enterprise storag
   - Over time, 4 GiB of data is added to Vol 2 and the total size of its data is 14 GiB.
   - Snap B is taken from Vol 2. For Snap B, only the 4 GiB of data that was added after the volume was created from Snap A is backed up. The other 10 GiB of unchanged data, which is already stored in Snap A, is referenced by Snap B instead of being backed up again.
   - Snap B is an incremental snapshot of Snap A, even though it was created from a different volume.
+
     ![IncrementalSnapshotsMultipleVolumes](https://docs.aws.amazon.com/images/ebs/latest/userguide/images/snapshot_1c.png)
 
 - Some more features :
@@ -256,14 +258,18 @@ An AWS security group acts as a stateful virtual firewall for your cloud resourc
 
 5. <u>_**Key Pairs**_</u> : A Key Pairs consisting of a public key and a private key, is the set of security credentials used to prove your identity when connecting to a Linux EC2 instance. AWS stores the public key, and you are responsible for securely storing the private key file (.pem). You will use this private key to SSH into your instance.
 
-**EC2 Pricing Models** : Choosing an instance type is a separate decision from choosing how you pay for it.
+---
 
-- On-Demand: Pay by the second with no commitment. Best for unpredictable workloads and development or testing.
-- Savings Plans / Reserved Instances: Commit to a 1 or 3 year term for discounts of up to 72%. Best for steady-state, predictable workloads.
-- Spot Instances: Bid on spare EC2 capacity for discounts of up to 90%. Ideal for fault-tolerant, interruption-tolerant workloads like batch processing or data analysis, as AWS can terminate these instances with a two-minute warning.
-- Dedicated Hosts : A physical server with EC2 instance capacity fully dedicated to your use. Allows you address compliance requirements and use your existing server-bound software licenses (per-socket, per-core, pe—VM software licenses). Purchasing Options: On-demand – pay per second for active Dedicated Host and Reserved - 1 or 3 years (No Upfront, Partial Upfront, All Upfront)
-- Dedicated Instances : Instances run on hardware that’s dedicated to you only. May share hardware with other instances in same account. No control over instance placement (can move hardware after Stop / Start)
-- Capacity Reservations : Reserve On-Demand instances capacity in a specific AZ for any duration. You always have access to EC2 capacity when you need it. No time commitment (create/cancel anytime), no billing discounts. Combine with Regional Reserved Instances and Savings Plans to benefit from billing discounts. You’re charged at On-Demand rate whether you run instances or not
+#### EC2 Pricing Models
+
+Choosing an instance type is a separate decision from choosing how you pay for it.
+
+- _On-Demand Instances_ : Pay by the hour or second (60-second minimum) with no upfront payment or long-term commitment. Highest unit rate, best for short-term, spiky, or unpredictable workloads.
+- _Savings Plans_ : Commit to a consistent hourly spend ($/hour) for a 1- or 3-year term for discounts of up to 72% compared to On-Demand. Flexible across instance types, regions, and operating systems (and can extend to other compute services).
+- _Reserved Instances (RIs)_ : Commit to specific instance attributes (such as instance family, OS, and region) for 1 or 3 years for significant discounts (up to 72%). Available in Standard (higher discount, less flexibility) and Convertible (lower discount, can change instance families) options, with No, Partial, or All Upfront payment choices.
+- _Spot Instances_ : Use spare AWS capacity at discounts of up to 90% off On-Demand rates. AWS can reclaim instances with advance notice, making them suited for batch jobs, testing, and fault-tolerant tasks.
+- _Dedicated Hosts & Dedicated Instances_ : Single-tenant or physically dedicated servers for compliance or bringing existing server-bound software licenses (purchased On-Demand or via reservations/plans).
+- _Capacity Reservations & Capacity Blocks for ML_ : Reserve compute capacity in a specific Availability Zone for critical events or disaster recovery, or reserve GPU capacity in advance for machine learning workloads.
 
 ![SharedResponsiilityForEC2](images/sharedResponsibilityForEC2.png)
 

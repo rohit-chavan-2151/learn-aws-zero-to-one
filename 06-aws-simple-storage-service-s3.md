@@ -50,8 +50,8 @@ Amazon S3 (Simple Storage Service) is a highly scalable, secure, and durable clo
   - These storage classes require minimum storage durations and retrieval fees making them most effective for rarely accessed data.
   - Amazon S3 provides the following S3 Glacier storage classes:
     - **S3 Glacier Instant Retrieval (GLACIER_IR)** – Use for long-term data that's rarely accessed and requires milliseconds retrieval. Data in this storage class is available for real-time access.
-  - **S3 Glacier Flexible Retrieval (GLACIER)** – Use for archives where portions of the data might need to be retrieved in minutes. Data in this storage class is archived, and not available for real-time access.
-  - **S3 Glacier Deep Archive (DEEP_ARCHIVE)** – Use for archiving data that rarely needs to be accessed. Data in this storage class is archived, and not available for real-time access.
+    - **S3 Glacier Flexible Retrieval (GLACIER)** – Use for archives where portions of the data might need to be retrieved in minutes. Data in this storage class is archived, and not available for real-time access.
+    - **S3 Glacier Deep Archive (DEEP_ARCHIVE)** – Use for archiving data that rarely needs to be accessed. Data in this storage class is archived, and not available for real-time access.
 
 - _**Storage class for Amazon S3 on Outposts**_ : With Amazon S3 on Outposts, you can create S3 buckets on your AWS Outposts resources and store and retrieve objects on-premises for applications that require local data access, local data processing, and data residency. You can use the same API operations and features on AWS Outposts as you do on Amazon S3, including access policies, encryption, and tagging.
 
