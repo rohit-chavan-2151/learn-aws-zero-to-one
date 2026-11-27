@@ -83,7 +83,7 @@ AWS groups EC2 instances into several families based on target use cases.
 
 ---
 
-#### AWS Elastic Block Store(EBS)
+### AWS Elastic Block Store(EBS)
 
 It is a high-performance, persistent block storage service designed for use with Amazon Elastic Compute Cloud (EC2). Amazon EBS works like a virtual hard drive for EC2 instances. It is designed for workloads that require low latency, high IOPS, and durable storage. It provides :
 
@@ -110,22 +110,108 @@ Amazon EBS provides several native features designed to manage enterprise storag
 - By default, any other attached EBS volume is not deleted (attribute disabled)
 - Use case: preserve root volume when instance is terminated
 
-**EBS Snapshots** : Amazon EBS snapshots are incremental, point-in-time backups of Amazon Elastic Block Store (EBS) volumes stored in Amazon S3. You make a backup (snapshot) of your EBS volume at a point in time. Not necessary to detach volume to do snapshot, but recommended. You can copy snapshots across AZ or Regions.
+- **EBS Volumes** : An Amazon EBS volume is a durable, block-level storage device that you can attach to your instances. After you attach a volume to an instance, you can use it as you would use a physical hard drive. EBS volumes are flexible. For current-generation volumes attached to current-generation instance types, you can dynamically increase size, modify the provisioned IOPS capacity, and change volume type on live production volumes.
+  - You can use EBS volumes as primary storage for data that requires frequent updates, such as the system drive for an instance or storage for a database application. You can also use them for throughput-intensive applications that perform continuous disk scans. EBS volumes persist independently from the running life of an EC2 instance.
+  - You can attach multiple EBS volumes to a single instance. The volume and instance must be in the same Availability Zone.
+  - Amazon EBS provides the following volume types: General Purpose SSD (gp2 and gp3), Provisioned IOPS SSD (io1 and io2), Throughput Optimized HDD (st1), Cold HDD (sc1), and Magnetic (standard). They differ in performance characteristics and price, allowing you to tailor your storage performance and cost to the needs of your applications.
 
-- **How They Work** :
+- **Features of Amazon EBS volumes** :-
+- _**Data availability**_ : When you create an EBS volume, it is automatically replicated within its Availability Zone to prevent data loss due to failure of any single hardware component. You can attach an EBS volume to any EC2 instance in the same Availability Zone.
+  - After you attach a volume, it appears as a native block device similar to a hard drive or other physical device. At that point, the instance can interact with the volume just as it would with a local drive.
+  - You can connect to the instance and format the EBS volume with a file system, such as Ext4 for a Linux instance or NTFS for a Windows instance, and then install applications.
+  - If you attach multiple volumes to a device that you have named, you can stripe data across the volumes for increased I/O and throughput performance.
+- **Data persistence** : An EBS volume is off-instance storage that can persist independently from the life of an instance. You continue to pay for the volume usage as long as the data persists.
+  - EBS volumes that are attached to a running instance can automatically detach from the instance with their data intact when the instance is terminated if you uncheck the Delete on Termination check box when you configure EBS volumes for your instance on the EC2 console. The volume can then be reattached to a new instance, enabling quick recovery. If the check box for Delete on Termination is checked, the volume(s) will delete upon termination of the EC2 instance.
+  - If you are using an EBS-backed instance, you can stop and restart that instance without affecting the data stored in the attached volume. The volume remains attached throughout the stop-start cycle. This enables you to process and store the data on your volume indefinitely, only using the processing and storage resources when required. The data persists on the volume until the volume is deleted explicitly.
+  - The physical block storage used by deleted EBS volumes is overwritten with zeroes or cryptographically pseudorandom data before it is allocated to a new volume. If you are dealing with sensitive data, you should consider encrypting your data manually or storing the data on a volume protected by Amazon EBS encryption.
+  - By default, the root EBS volume that is created and attached to an instance at launch is deleted when that instance is terminated. You can modify this behavior by changing the value of the flag DeleteOnTermination to false when you launch the instance. This modified value causes the volume to persist even after the instance is terminated, and enables you to attach the volume to another instance.
+  - By default, additional EBS volumes that are created and attached to an instance at launch are not deleted when that instance is terminated. You can modify this behavior by changing the value of the flag DeleteOnTermination to true when you launch the instance. This modified value causes the volumes to be deleted when the instance is terminated.
+- **Data encryption** : For simplified data encryption, you can create encrypted EBS volumes with the Amazon EBS encryption feature. All EBS volume types support encryption. You can use encrypted EBS volumes to meet a wide range of _data-at-rest_ encryption requirements for regulated/audited data and applications.
+  - Amazon EBS encryption uses 256-bit Advanced Encryption Standard algorithms (AES-256) and an Amazon-managed key infrastructure. The encryption occurs on the server that hosts the EC2 instance, providing encryption of _data-in-transit_ from the EC2 instance to Amazon EBS storage.
+  - Amazon EBS encryption uses AWS KMS keys when creating encrypted volumes and any snapshots created from your encrypted volumes. The first time you create an encrypted EBS volume in a Region, a default AWS managed KMS key is created for you automatically.
+  - This key is used for Amazon EBS encryption unless you create and use a customer managed key. Creating your own customer managed key gives you more flexibility, including the ability to create, rotate, disable, define access controls, and audit the encryption keys used to protect your data.
+- **Data security** : Amazon EBS volumes are presented to you as raw, unformatted block devices. These devices are logical devices that are created on the EBS infrastructure and the Amazon EBS service ensures that the devices are logically empty (that is, the raw blocks are zeroed or they contain cryptographically pseudorandom data) prior to any use or re-use by a customer.
+
+- _**Amazon EBS volume types**_ : Amazon EBS provides the following volume types, which differ in performance characteristics and price, so that you can tailor your storage performance and cost to the needs of your applications.
+  - **Solid state drive (SSD) volumes (High IOPS & Low Latency)** : SSD-backed volumes are optimized for transactional workloads involving frequent read/write operations with small I/O size, where the dominant performance attribute is IOPS. SSD-backed volume types include General Purpose SSD and Provisioned IOPS SSD .
+    - _gp3 (General Purpose SSD)_ : Latest-generation default choice for most workloads (boot volumes, dev/test, small databases, virtual desktops). Scales IOPS and throughput independently of storage size.
+    - _gp2 (General Purpose SSD)_ : Previous-generation general-purpose SSD where performance scales with volume size and uses burst credits.
+    - _io2 Block Express (Provisioned IOPS SSD)_ : Highest-performance SSD volume for mission-critical, high-IOPS databases (e.g., SAP HANA, SQL Server, Oracle) with 99.999% durability.
+    - _io1 (Provisioned IOPS SSD)_ : Previous-generation provisioned IOPS SSD for demanding, IOPS-intensive workloads.
+  - **Hard disk drive (HDD) volumes (High Throughput, Non-Boot)** : HDD-backed volumes are optimized for large streaming workloads where the dominant performance attribute is throughput. HDD volume types include Throughput Optimized HDD and Cold HDD.
+    - _st1 (Throughput Optimized HDD)_ : Designed for frequently accessed, throughput-intensive workloads such as big data, data warehousing, and log processing.
+    - _sc1 (Cold HDD)_ : Lowest-cost HDD option for less frequently accessed, sequential data where cost matters more than speed
+  - **Previous generation volumes** : Magnetic (standard) volumes are previous generation volumes that are backed by magnetic drives. They are suited for workloads with small datasets where data is accessed infrequently and performance is not of primary importance. These volumes deliver approximately 100 IOPS on average, with burst capability of up to hundreds of IOPS, and they can range in size from 1 GiB to 1 TiB.
+    - _standard (Magnetic)_ : Legacy volume type suited only for small, infrequently accessed datasets or archives
+
+- **Amazon EBS volume lifecycle** : The lifecycle of an Amazon EBS volume starts with the creation process. You can create a volume from an Amazon EBS snapshot or you can create an empty volume.
+  - Before you can use your volume, you must attach it to one or more Amazon EC2 instances that are in the same Availability Zone as the volume. You can attach multiple volumes to an instance.
+  - If needed, you can detach a volume from one instance and then attach it to another instance. If your storage requirements change, you can modify the size or performance of the volume at any time.
+  - You can create point-in-time backups of your volumes by creating Amazon EBS snapshots.
+  - If you no longer need a volume, you can delete it to stop incurring the related storage costs.
+  - The following image shows actions that you can perform on your volumes as part of the volume lifecycle. There are also tasks that you perform by connecting to the instance and running an operating system command. For example, formatting the volume, mounting the volume, managing partitions, and viewing the free disk space.
+
+    ![EBSVolumeLifecycle](https://docs.aws.amazon.com/images/ebs/latest/userguide/images/volume-lifecycle.png)
+
+- **Amazon EBS volume status checks** : Volume status checks enable you to better understand, track, and manage potential inconsistencies in the data on an Amazon EBS volume. They are designed to provide you with the information that you need to determine whether your Amazon EBS volumes are impaired, and to help you control how a potentially inconsistent volume is handled.
+  - Volume status checks are automated tests that run every 5 minutes and return a pass or fail status. If all checks pass, the status of the volume is ok. If a check fails, the status of the volume is impaired. If the status is insufficient-data, the checks may still be in progress on the volume. You can view the results of volume status checks to identify any impaired volumes and take any necessary actions.
+  - When Amazon EBS determines that a volume's data is potentially inconsistent, the default is that it disables I/O to the volume from any attached EC2 instances, which helps to prevent data corruption. After I/O is disabled, the next volume status check fails, and the volume status is impaired.
+    - In addition, you'll see an event that lets you know that I/O is disabled, and that you can resolve the impaired status of the volume by enabling I/O to the volume. EBS waits until you enable I/O to give you the opportunity to decide whether to continue to let your instances use the volume, or to run a consistency check using a command, such as fsck (Linux instances) or chkdsk (Windows instances), before doing so.
+
+- **EBS Snapshots** : Amazon EBS snapshots are incremental, point-in-time backups of Amazon Elastic Block Store (EBS) volumes stored in Amazon S3. You make a backup (snapshot) of your EBS volume at a point in time. Not necessary to detach volume to do snapshot, but recommended. You can copy snapshots across AZ or Regions. A snapshot is an incremental backup, which means that we save only the blocks on the volume that have changed since the most recent snapshot. This minimizes the time required to create the snapshot and saves on storage costs by not duplicating data.
+  - Snapshots are stored in Amazon S3, in S3 buckets that you can't access directly. You can create and manage your snapshots using the Amazon EC2 console or the Amazon EC2 API. You can't access your snapshots using the Amazon S3 console or the Amazon S3 API.
+  - Snapshot data is automatically replicated across all Availability Zones in the Region. This provides high availability and durability for snapshot data, and enables you to restore volumes in any Availability Zones in that Region.
+  - Each snapshot contains all of the information that is needed to restore your data (from the moment when the snapshot was taken) to a new EBS volume. When you create an EBS volume from a snapshot, the new volume begins as an exact replica of the volume that was used to create the snapshot.
+
+- **How Amazon EBS snapshots work** : The first snapshot that you create from a volume is always a full snapshot. It includes all of the data blocks written to the volume at the time of creating the snapshot. Subsequent snapshots of the same volume are incremental snapshots. They include only changed and new data blocks written to the volume since the last snapshot was created
+  - The size of a full snapshot is determined by the size of the data being backed up, not the size of the source volume. Similarly, the storage costs associated with a full snapshot is determined by the size of the snapshot, not the size of the source volume. For example, you create the first snapshot of a 200 GiB Amazon EBS volume that contains only 50 GiB of data. This results in a full snapshot that is 50 GiB in size, and you are billed for 50 GiB snapshot storage.
+  - Similarly, the size and storage costs of an incremental snapshot are determined by the size of any data that was written to the volume since the previous snapshot was created. Continuing the previous example, if you create a second snapshot of the same 200 GiB volume after changing 20 GiB of data and adding 10 GiB of data, the incremental snapshot is 30 GiB in size. You are then billed for that additional 30 GiB snapshot storage.
+
+- **Multiple snapshots of the same volume** : The diagram in this section shows Volume 1, which is 15 GiB in size, at three points in time. A snapshot is taken of each of these three volume states. The diagram specifically shows the following:
+  - In State 1, the volume has 10 GiB of data. Snap A is the first snapshot taken of the volume. Snap A is a full snapshot and the entire 10 GiB of data is backed up.
+  - In State 2, the volume still contains 10 GiB of data, but only 4 GiB have changed after Snap A was taken. Snap B is an incremental snapshot. It needs to back up only the 4 GiB that changed. The other 6 GiB of unchanged data, which are already backed up in Snap A, are referenced by Snap B rather than being backed up again. This is indicated by the dashed arrow.
+  - In State 3, 2 GiB of data have been added to the volume, for a total of 12 GiB, after Snap B was taken. Snap C is an incremental snapshot. It needs to back up only the 2 GiB that were added after Snap B was taken. As shown by the dashed arrows, Snap C also references the 4 GiB of data stored in Snap B, and the 6 GiB of data stored in Snap A.
+  - The total storage required for the three snapshots is 16 GiB total. This accounts for 10 GiB for Snap A, 4 GiB for Snap B, and 2 GiB for Snap C.
+    ![MultipleSnapshotsSameVolume](https://docs.aws.amazon.com/images/ebs/latest/userguide/images/snapshot_1a.png)
+
+- **Incremental snapshots of different volumes** :
+  - The diagram in this section shows how incremental snapshots can be taken from different volumes.
+  - Vol 1, which is 14 GiB in size, has 10 GiB of data. Because Snap A is the first snapshot taken of the volume, it is a full snapshot and the entire 10 GiB of data is backed up.
+  - Vol 2 is created from Snap A, so it is an exact replica of Vol 1 at the time the snapshot was taken.
+  - Over time, 4 GiB of data is added to Vol 2 and the total size of its data is 14 GiB.
+  - Snap B is taken from Vol 2. For Snap B, only the 4 GiB of data that was added after the volume was created from Snap A is backed up. The other 10 GiB of unchanged data, which is already stored in Snap A, is referenced by Snap B instead of being backed up again.
+  - Snap B is an incremental snapshot of Snap A, even though it was created from a different volume.
+    ![IncrementalSnapshotsMultipleVolumes](https://docs.aws.amazon.com/images/ebs/latest/userguide/images/snapshot_1c.png)
+
+- Some more features :
   - Incremental Backups : The first snapshot is a full copy of all data blocks on the volume. Later snapshots only save blocks that have changed since the previous backup.
   - Automatic Chain Management : If you delete an older snapshot, only the data blocks unique to that snapshot are deleted; blocks shared with other snapshots in the chain are preserved.
   - Storage Location : Snapshots live in Amazon S3 and are decoupled from specific Availability Zones (AZs), making them portable across regions
+  - EBS Snapshot Archive : Move a Snapshot to an ”archive tier” that is 75% cheaper. But it takes within 24 to 72 hours for restoring
+    the archive.
+  - Recycle Bin for EBS Snapshots : Setup rules to retain deleted snapshots so you can recover them after an accidental deletion. You can specify retention (from 1 day to 1 year)
+  - Fast Snapshot Restore (FSR) : Eliminates initial read latency ("warming up") on newly restored volumes, though it incurs extra costs
+  - Automation : You can schedule and manage lifecycle policies using Amazon Data Lifecycle Manager (DLM) or AWS Backup.
 
-- EBS Snapshot Archive : Move a Snapshot to an ”archive tier” that is 75% cheaper. But it takes within 24 to 72 hours for restoring
-  the archive.
-- Recycle Bin for EBS Snapshots : Setup rules to retain deleted snapshots so you can recover them after an accidental deletion. You can specify retention (from 1 day to 1 year)
-- Fast Snapshot Restore (FSR) : Eliminates initial read latency ("warming up") on newly restored volumes, though it incurs extra costs
-- Automation : You can schedule and manage lifecycle policies using Amazon Data Lifecycle Manager (DLM) or AWS Backup.
+- **Amazon EBS encryption** : Use Amazon EBS encryption as a straight-forward encryption solution for your Amazon EBS resources associated with your Amazon EC2 instances. With Amazon EBS encryption, you aren't required to build, maintain, and secure your own key management infrastructure. Amazon EBS encryption uses AWS KMS keys when creating encrypted volumes and snapshots.
+  - Encryption operations occur on the servers that host EC2 instances, ensuring the security of both data-at-rest and data-in-transit between an instance and its attached EBS storage.
+  - You can attach both encrypted and unencrypted volumes to an instance simultaneously. All Amazon EC2 instance types support Amazon EBS encryption.
+  - _Encrypt EBS resources_ : You encrypt EBS volumes by enabling encryption, either using encryption by default or by enabling encryption when you create a volume that you want to encrypt.
+    - When you encrypt a volume, you can specify the symmetric encryption KMS key to use to encrypt the volume. If you do not specify a KMS key, the KMS key that is used for encryption depends on the encryption state of the source snapshot and its ownership.
+    - You cannot change the KMS key that is associated with an existing snapshot or volume. However, you can associate a different KMS key during a snapshot copy operation so that the resulting copied snapshot is encrypted by the new KMS key.
+  - _Encrypt an empty volume on creation_ : When you create a new, empty EBS volume, you can encrypt it by enabling encryption for the specific volume creation operation. If you enabled EBS encryption by default, the volume is automatically encrypted using your default KMS key for EBS encryption.
+    - Alternatively, you can specify a different symmetric encryption KMS key for the specific volume creation operation. The volume is encrypted by the time it is first available, so your data is always secured.
+    - By default, the KMS key that you selected when creating a volume encrypts the snapshots that you make from the volume and the volumes that you restore from those encrypted snapshots. You cannot remove encryption from an encrypted volume or snapshot, which means that a volume restored from an encrypted snapshot, or a copy of an encrypted snapshot, is always encrypted.
 
-4. <u>_**Security Groups**_</u> : A security Group acts as a virtual firewall for your EC2 instance, controlling all inbound and outbound traffic. You define rules that specify which protocols (e.g., SSH, HTTP), ports (e.g., 22, 80), and IP address ranges are allowed to send traffic to or receive traffic from your instance.
+- **AWS Backup for Amazon Elastic Block Store** : AWS Backup is a fully managed service that centralizes and automates data protection across your entire AWS environment. Rather than managing snapshot schedules and retention per resource, you define a single backup policy and apply it across accounts and Regions.
+  - Tag your resources and AWS Backup protects them automatically, with no per-team configuration required. The service supports many AWS services, including Amazon EBS, Amazon EC2, Amazon S3, Amazon EFS, Amazon RDS, and Aurora. As a result, one policy can protect volumes, databases, file systems, and object stores together without separate backup tools per workload.
+  - For Amazon EBS, AWS Backup delivers crash-consistent, multi-volume snapshots that coordinate point-in-time backups across all volumes attached to an Amazon EC2 instance. This is essential for databases and clustered applications that span multiple volumes.
+  - AWS Backup Search takes recovery a step further by enabling item-level recovery. You can locate and restore individual files or directories from Amazon EBS snapshots without restoring the entire volume.
+  - AWS Backup also adds enterprise-grade security and compliance to your snapshots. Logically air-gapped vaults isolate recovery points from your production environment. Vault Lock enforces immutability. Amazon GuardDuty integration scans backups for malware. Backup Audit Manager continuously evaluates your backup posture and generates audit-ready compliance reports.
 
 ---
+
+4. <u>_**Security Groups**_</u> : A security Group acts as a virtual firewall for your EC2 instance, controlling all inbound and outbound traffic. You define rules that specify which protocols (e.g., SSH, HTTP), ports (e.g., 22, 80), and IP address ranges are allowed to send traffic to or receive traffic from your instance.
 
 #### Security Group in AWS
 
@@ -210,7 +296,11 @@ _**Amazon Machine Image (AMI)**_ : AMI are a customization of an EC2 instance. I
 - Distribution & Lifecycle : Shares images across multiple AWS regions and accounts, while managing automated cleanup or deprecation of older versions.
 - Cost : The service itself is free to use, though you pay standard AWS rates for the underlying EC2 instances, EBS storage, and S3 logs utilized during builds.
 
-**EC2 Instance Storage** : EC2 Instance storage is the temporary block storage service offered by AWS. EC2 instance storage, in itself, is not a storage service but a part of the EC2 service. These storage devices physically lie on the same host that provides the EC2 instance and are useful for storing temporary data associated with the EC2 instances.
+---
+
+#### EC2 Instance Storage :
+
+EC2 Instance storage is the temporary block storage service offered by AWS. EC2 instance storage, in itself, is not a storage service but a part of the EC2 service. These storage devices physically lie on the same host that provides the EC2 instance and are useful for storing temporary data associated with the EC2 instances.
 
 - With the instance store, you get temporary block-level storage which is associated with each EC2 instance.
 - The size, number, and type of instance store volumes that are available depend on the Instance Type used and they are directly hooked onto the underlying host.
@@ -222,7 +312,11 @@ _**Amazon Machine Image (AMI)**_ : AMI are a customization of an EC2 instance. I
   - Availability : Not all EC2 instance types support instance stores; they are built into specific instance families (such as M5D, C6GD, or R6GD).
   - No Backups : Instance store volumes do not support native AWS snapshots or backups.
 
-**EFS – Elastic File System** : Amazon Elastic File System (EFS) is a fully managed, serverless, and elastic file storage service provided by AWS. It uses the NFS (Network File System) protocol to provide shared file storage that can be accessed simultaneously by thousands of compute resources, unlike Amazon EBS, which provides block storage for a single EC2 instance. EFS works with Linux EC2 instances in multi-AZ. They are highly available, scalable, expensive (3x gp2), pay per use, no capacity planning.
+---
+
+#### EFS – Elastic File System :
+
+Amazon Elastic File System (EFS) is a fully managed, serverless, and elastic file storage service provided by AWS. It uses the NFS (Network File System) protocol to provide shared file storage that can be accessed simultaneously by thousands of compute resources, unlike Amazon EBS, which provides block storage for a single EC2 instance. EFS works with Linux EC2 instances in multi-AZ. They are highly available, scalable, expensive (3x gp2), pay per use, no capacity planning.
 
 - Automatically scales storage capacity based on usage.
 - Supports simultaneous access from EC2 instances, ECS/EKS containers, and AWS Lambda functions.
@@ -250,6 +344,8 @@ _**Amazon Machine Image (AMI)**_ : AMI are a customization of an EC2 instance. I
 **EFS Infrequent Access (EFS-IA)** : Storage class that is cost-optimized for files not accessed every day. It has up to 92% lower cost compared to EFS Standard. EFS will automatically move your files to EFS-IA based on the last time they were accessed. Enable EFS-IA with a Lifecycle Policy. Example: move files that are not accessed for 60days to EFS-IA. Transparent to the applications accessing EFS.
 
 ![sharedResponsibilityForEC2Storage](images/sharedResponsibilityForEC2Storage.png)
+
+---
 
 **AWS EC2 Status checks** : An Amazon EC2 status check is an automated test performed by AWS every minute to detect hardware, software, or network issues on your virtual server. It performs 3 types of check for an EC2 instance,
 
